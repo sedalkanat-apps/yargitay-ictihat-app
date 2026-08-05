@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abonelik — Untitled Project</title>
+
+  <!-- Tailwind CSS (pinned — matches the renderer/screenshot surfaces) -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          background: 'rgb(8 19 33 / <alpha-value>)',
+          foreground: 'rgb(244 247 251 / <alpha-value>)',
+          primary: { DEFAULT: 'rgb(53 185 201 / <alpha-value>)', foreground: 'rgb(6 21 29 / <alpha-value>)' },
+          secondary: { DEFAULT: 'rgb(23 42 61 / <alpha-value>)', foreground: 'rgb(228 237 245 / <alpha-value>)' },
+          accent: { DEFAULT: 'rgb(215 174 88 / <alpha-value>)', foreground: 'rgb(28 22 8 / <alpha-value>)' },
+          muted: { DEFAULT: 'rgb(16 34 53 / <alpha-value>)', foreground: 'rgb(169 185 200 / <alpha-value>)' },
+          card: { DEFAULT: 'rgb(14 29 45 / <alpha-value>)', foreground: 'rgb(244 247 251 / <alpha-value>)' },
+          border: 'rgb(41 64 87 / <alpha-value>)',
+          input: 'rgb(19 38 58 / <alpha-value>)',
+          destructive: { DEFAULT: 'rgb(239 108 108 / <alpha-value>)', foreground: 'rgb(36 10 10 / <alpha-value>)' },
+          success: { DEFAULT: 'rgb(81 197 139 / <alpha-value>)', foreground: 'rgb(6 26 16 / <alpha-value>)' },
+          chart1: 'rgb(53 185 201 / <alpha-value>)',
+          chart2: 'rgb(215 174 88 / <alpha-value>)',
+          chart3: 'rgb(126 155 232 / <alpha-value>)',
+          chart4: 'rgb(81 197 139 / <alpha-value>)',
+          chart5: 'rgb(215 123 155 / <alpha-value>)',
+          ring: 'rgb(53 185 201 / <alpha-value>)',
+        },
+        fontFamily: {
+          heading: ['var(--font-heading, Inter)', 'system-ui'],
+          body: ['var(--font-body, Inter)', 'system-ui'],
+        },
+        borderRadius: { DEFAULT: 'var(--radius, 12px)', theme: 'var(--radius, 12px)' },
+      }}
+    };
+</script>
+
+  <!-- Iconify Web Component -->
+  <script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+
+  <!-- Design Tokens + Custom Classes -->
+  <style>
+  :root {
+    --color-background: #081321;
+    --color-foreground: #F4F7FB;
+    --color-primary: #35B9C9;
+    --color-primary-foreground: #06151D;
+    --color-secondary: #172A3D;
+    --color-secondary-foreground: #E4EDF5;
+    --color-accent: #D7AE58;
+    --color-accent-foreground: #1C1608;
+    --color-muted: #102235;
+    --color-muted-foreground: #A9B9C8;
+    --color-card: #0E1D2D;
+    --color-card-foreground: #F4F7FB;
+    --color-border: #294057;
+    --color-input: #13263A;
+    --color-destructive: #EF6C6C;
+    --color-destructive-foreground: #240A0A;
+    --color-success: #51C58B;
+    --color-success-foreground: #061A10;
+    --color-chart1: #35B9C9;
+    --color-chart2: #D7AE58;
+    --color-chart3: #7E9BE8;
+    --color-chart4: #51C58B;
+    --color-chart5: #D77B9B;
+    --font-heading: 'Manrope', sans-serif;
+    --font-body: 'Source Sans 3', sans-serif;
+    --radius: 12px;
+  }
+
+  body {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 0;
+  }
+  </style>
+</head>
+<body class="bg-background text-foreground m-0 p-0">
+  <div class="h-screen w-screen overflow-hidden">
+    <div class="min-h-screen w-full bg-background text-foreground font-body pb-32">
+      <header class="flex items-center px-5 pt-12 pb-4">
+        <button aria-label="Geri dön" class="flex h-10 w-10 items-center justify-center rounded-theme border border-border bg-card text-muted-foreground">
+          <iconify-icon icon="lucide:arrow-left" class="text-xl"></iconify-icon>
+        </button>
+        <div class="ml-3">
+          <p class="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">YARGITAY İÇTİHAT</p>
+          <p class="mt-1 text-xs text-muted-foreground">Aboneliği Yönet</p>
+        </div>
+      </header>
+
+      <main class="px-5">
+
+
+        <section class="mt-5 rounded-theme border border-accent/50 bg-secondary p-5 shadow-sm shadow-black/20">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-[11px] font-bold text-accent-foreground">
+                <iconify-icon icon="lucide:sparkles" class="text-sm"></iconify-icon>
+                İlk 3 Gün Ücretsiz
+              </div>
+              <h2 class="mt-4 font-heading text-lg font-bold text-secondary-foreground">Yıllık Plan</h2>
+              <p class="mt-1 text-xs text-muted-foreground">Tüm profesyonel araçlar dahil</p>
+            </div>
+            <div class="text-right">
+              <p class="font-heading text-[26px] font-bold tracking-tight text-secondary-foreground">₺10.000<span class="text-sm font-semibold text-muted-foreground">/yıl</span></p>
+              <p class="mt-1 font-mono text-[11px] text-muted-foreground">Yıllık abonelik</p>
+            </div>
+          </div>
+          <div class="mt-5 space-y-2 border-t border-border pt-4">
+            <div class="flex items-center justify-between rounded-lg border border-border bg-card/50 px-3 py-2.5">
+              <span class="text-xs font-semibold text-secondary-foreground">Haftalık abonelik</span>
+              <span class="font-mono text-sm font-bold text-secondary-foreground">₺500 <span class="text-[10px] font-semibold text-muted-foreground">/hafta</span></span>
+            </div>
+            <div class="flex items-center justify-between rounded-lg border border-border bg-card/50 px-3 py-2.5">
+              <span class="text-xs font-semibold text-secondary-foreground">Aylık abonelik</span>
+              <span class="font-mono text-sm font-bold text-secondary-foreground">₺1.000 <span class="text-[10px] font-semibold text-muted-foreground">/ay</span></span>
+            </div>
+            <div class="flex items-center justify-between rounded-lg border border-accent/50 bg-accent/10 px-3 py-2.5">
+              <div class="flex items-center gap-2">
+                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-success/15 text-success"><iconify-icon icon="lucide:check" class="text-xs"></iconify-icon></span>
+                <span class="text-xs font-bold text-secondary-foreground">Yıllık abonelik</span>
+              </div>
+              <span class="font-mono text-sm font-bold text-secondary-foreground">₺10.000 <span class="text-[10px] font-semibold text-muted-foreground">/yıl</span></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="mt-6">
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="font-heading text-base font-bold text-foreground">Planınıza dahil olanlar</h2>
+            <span class="font-mono text-[10px] text-muted-foreground">SINIRSIZ</span>
+          </div>
+          <div class="divide-y divide-border rounded-theme border border-border bg-card px-4">
+            <div class="flex items-center gap-3 py-3.5">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 text-primary"><iconify-icon icon="lucide:search-check" class="text-base"></iconify-icon></span>
+              <span class="flex-1 text-sm font-semibold text-card-foreground">Sınırsız arama</span>
+              <iconify-icon icon="lucide:check" class="text-base text-success"></iconify-icon>
+            </div>
+            <div class="flex items-center gap-3 py-3.5">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 text-primary"><iconify-icon icon="lucide:sliders-horizontal" class="text-base"></iconify-icon></span>
+              <span class="flex-1 text-sm font-semibold text-card-foreground">Gelişmiş filtreleme</span>
+              <iconify-icon icon="lucide:check" class="text-base text-success"></iconify-icon>
+            </div>
+            <div class="flex items-center gap-3 py-3.5">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-accent/15 text-accent"><iconify-icon icon="lucide:file-down" class="text-base"></iconify-icon></span>
+              <span class="flex-1 text-sm font-semibold text-card-foreground">Karar PDF indirme</span>
+              <iconify-icon icon="lucide:check" class="text-base text-success"></iconify-icon>
+            </div>
+            <div class="flex items-center gap-3 py-3.5">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 text-primary"><iconify-icon icon="lucide:headphones" class="text-base"></iconify-icon></span>
+              <span class="flex-1 text-sm font-semibold text-card-foreground">Öncelikli destek</span>
+              <iconify-icon icon="lucide:check" class="text-base text-success"></iconify-icon>
+            </div>
+            <div class="flex items-center gap-3 py-3.5">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-accent/15 text-accent"><iconify-icon icon="lucide:eye-off" class="text-base"></iconify-icon></span>
+              <span class="flex-1 text-sm font-semibold text-card-foreground">Reklamsız deneyim</span>
+              <iconify-icon icon="lucide:check" class="text-base text-success"></iconify-icon>
+            </div>
+          </div>
+        </section>
+
+        <section class="mt-5 rounded-theme border border-border bg-muted p-4">
+          <div class="flex items-start gap-3">
+            <iconify-icon icon="lucide:info" class="mt-0.5 text-lg text-primary"></iconify-icon>
+            <p class="text-xs leading-5 text-muted-foreground">3 gün sonra otomatik olarak yıllık aboneliğe geçer, istediğiniz zaman App Store üzerinden iptal edebilirsiniz</p>
+          </div>
+        </section>
+
+        <section class="mt-5 flex items-center justify-center gap-5 pb-5">
+          <div class="flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground">
+            <iconify-icon icon="lucide:users" class="text-base text-primary"></iconify-icon>
+            10.000+ avukat kullanıyor
+          </div>
+          <div class="h-4 w-px bg-border"></div>
+          <div class="flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground">
+            <iconify-icon icon="lucide:shield-check" class="text-base text-success"></iconify-icon>
+            Güvenli Ödeme
+          </div>
+        </section>
+      </main>
+
+      <div class="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 pb-5 pt-3 backdrop-blur-xl">
+        <div class="mx-auto w-full max-w-[393px]">
+          <button class="flex w-full items-center justify-center gap-2 rounded-theme bg-primary py-4 font-heading text-[15px] font-bold text-primary-foreground shadow-lg shadow-primary/20">
+            <iconify-icon icon="lucide:zap" class="text-lg"></iconify-icon>
+            Ücretsiz Denemeyi Başlat
+            <iconify-icon icon="lucide:arrow-right" class="text-lg"></iconify-icon>
+          </button>
+          <div class="mt-3 flex items-center justify-center gap-3 text-[10px] text-muted-foreground">
+            <a href="#" class="underline decoration-border underline-offset-2">Kullanım Koşulları</a>
+            <span class="text-border">•</span>
+            <a href="#" class="underline decoration-border underline-offset-2">Gizlilik Politikası</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Icon self-healing: a missing icon name renders as INVISIBLE empty space
+    // (iconify-icon fails silently). Its `status` property ('rendered' |
+    // 'loading' | 'failed') lets us swap failures to a neutral glyph.
+    (function() {
+      var els = document.querySelectorAll('iconify-icon');
+      for (var i = 0; i < els.length; i++) (function(el) {
+        var tries = 0;
+        (function check() {
+          var s = el.status;
+          if (s === 'failed') el.setAttribute('icon', 'lucide:circle');
+          else if (s !== 'rendered' && tries++ < 40) setTimeout(check, 250);
+        })();
+      })(els[i]);
+    })();
+  </script>
+</body>
+</html>

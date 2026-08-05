@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karar Detayı — Untitled Project</title>
+
+  <!-- Tailwind CSS (pinned — matches the renderer/screenshot surfaces) -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          background: 'rgb(8 19 33 / <alpha-value>)',
+          foreground: 'rgb(244 247 251 / <alpha-value>)',
+          primary: { DEFAULT: 'rgb(53 185 201 / <alpha-value>)', foreground: 'rgb(6 21 29 / <alpha-value>)' },
+          secondary: { DEFAULT: 'rgb(23 42 61 / <alpha-value>)', foreground: 'rgb(228 237 245 / <alpha-value>)' },
+          accent: { DEFAULT: 'rgb(215 174 88 / <alpha-value>)', foreground: 'rgb(28 22 8 / <alpha-value>)' },
+          muted: { DEFAULT: 'rgb(16 34 53 / <alpha-value>)', foreground: 'rgb(169 185 200 / <alpha-value>)' },
+          card: { DEFAULT: 'rgb(14 29 45 / <alpha-value>)', foreground: 'rgb(244 247 251 / <alpha-value>)' },
+          border: 'rgb(41 64 87 / <alpha-value>)',
+          input: 'rgb(19 38 58 / <alpha-value>)',
+          destructive: { DEFAULT: 'rgb(239 108 108 / <alpha-value>)', foreground: 'rgb(36 10 10 / <alpha-value>)' },
+          success: { DEFAULT: 'rgb(81 197 139 / <alpha-value>)', foreground: 'rgb(6 26 16 / <alpha-value>)' },
+          chart1: 'rgb(53 185 201 / <alpha-value>)',
+          chart2: 'rgb(215 174 88 / <alpha-value>)',
+          chart3: 'rgb(126 155 232 / <alpha-value>)',
+          chart4: 'rgb(81 197 139 / <alpha-value>)',
+          chart5: 'rgb(215 123 155 / <alpha-value>)',
+          ring: 'rgb(53 185 201 / <alpha-value>)',
+        },
+        fontFamily: {
+          heading: ['var(--font-heading, Inter)', 'system-ui'],
+          body: ['var(--font-body, Inter)', 'system-ui'],
+        },
+        borderRadius: { DEFAULT: 'var(--radius, 12px)', theme: 'var(--radius, 12px)' },
+      }}
+    };
+</script>
+
+  <!-- Iconify Web Component -->
+  <script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+
+  <!-- Design Tokens + Custom Classes -->
+  <style>
+  :root {
+    --color-background: #081321;
+    --color-foreground: #F4F7FB;
+    --color-primary: #35B9C9;
+    --color-primary-foreground: #06151D;
+    --color-secondary: #172A3D;
+    --color-secondary-foreground: #E4EDF5;
+    --color-accent: #D7AE58;
+    --color-accent-foreground: #1C1608;
+    --color-muted: #102235;
+    --color-muted-foreground: #A9B9C8;
+    --color-card: #0E1D2D;
+    --color-card-foreground: #F4F7FB;
+    --color-border: #294057;
+    --color-input: #13263A;
+    --color-destructive: #EF6C6C;
+    --color-destructive-foreground: #240A0A;
+    --color-success: #51C58B;
+    --color-success-foreground: #061A10;
+    --color-chart1: #35B9C9;
+    --color-chart2: #D7AE58;
+    --color-chart3: #7E9BE8;
+    --color-chart4: #51C58B;
+    --color-chart5: #D77B9B;
+    --font-heading: 'Manrope', sans-serif;
+    --font-body: 'Source Sans 3', sans-serif;
+    --radius: 12px;
+  }
+
+  body {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 0;
+  }
+  </style>
+</head>
+<body class="bg-background text-foreground m-0 p-0">
+  <div class="h-screen w-screen overflow-hidden">
+    <div class="min-h-screen w-full bg-background text-foreground font-body pb-32">
+      <header class="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-xl">
+        <div class="mx-auto flex h-[72px] max-w-[393px] items-center gap-3 px-5">
+          <button aria-label="Geri dön" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-theme border border-border bg-card text-muted-foreground">
+            <iconify-icon icon="lucide:arrow-left" class="text-xl"></iconify-icon>
+          </button>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2">
+              <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+              <p class="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-primary">Karar Detayı</p>
+            </div>
+            <p class="mt-1 truncate font-heading text-sm font-bold text-foreground">21. Hukuk Dairesi</p>
+          </div>
+          <button aria-label="Diğer seçenekler" class="flex h-10 w-10 items-center justify-center rounded-theme border border-border bg-card text-muted-foreground">
+            <iconify-icon icon="lucide:ellipsis" class="text-xl"></iconify-icon>
+          </button>
+        </div>
+        <div class="mx-auto max-w-[393px] border-t border-border bg-card/80 px-5 py-3">
+          <div class="flex items-center justify-between gap-3">
+            <span class="font-mono text-[11px] font-semibold text-muted-foreground">İŞ HUKUKU · İŞ KAZASI</span>
+            <span class="flex items-center gap-1.5 text-[11px] font-semibold text-success">
+              <iconify-icon icon="lucide:badge-check" class="text-sm"></iconify-icon>
+              Güncel içtihat
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <main class="mx-auto max-w-[393px] space-y-6 px-5 pt-6">
+        <section>
+          <div class="mb-4 flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <p class="mb-2 text-xs font-semibold text-primary">Yargıtay 21. Hukuk Dairesi</p>
+              <h1 class="font-heading text-[26px] font-extrabold leading-[1.12] tracking-tight text-foreground">İş kazasında kusur oranı ve tazminat</h1>
+            </div>
+            <button aria-label="Kararı kaydet" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-theme border border-accent/40 bg-accent/10 text-accent">
+              <iconify-icon icon="lucide:bookmark" class="text-xl"></iconify-icon>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="rounded-theme border border-border bg-card px-3 py-3">
+              <p class="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Esas</p>
+              <p class="font-mono text-sm font-semibold text-card-foreground">2022/4521</p>
+            </div>
+            <div class="rounded-theme border border-border bg-card px-3 py-3">
+              <p class="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Karar</p>
+              <p class="font-mono text-sm font-semibold text-card-foreground">2023/8890</p>
+            </div>
+            <div class="col-span-2 flex items-center justify-between rounded-theme border border-border bg-card px-3 py-3">
+              <div>
+                <p class="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Karar tarihi</p>
+                <p class="font-mono text-sm font-semibold text-card-foreground">14.03.2023</p>
+              </div>
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <iconify-icon icon="lucide:calendar-days" class="text-base"></iconify-icon>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="rounded-theme border border-primary/35 bg-card p-5 shadow-lg shadow-black/10">
+          <div class="mb-4 flex items-center gap-2">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 text-primary">
+              <iconify-icon icon="lucide:sparkles" class="text-base"></iconify-icon>
+            </span>
+            <h2 class="font-heading text-base font-bold text-card-foreground">Özet</h2>
+            <span class="ml-auto rounded-full bg-primary/10 px-2 py-1 text-[10px] font-bold text-primary">YAPAY ZEKÂ DESTEKLİ</span>
+          </div>
+          <p class="text-[15px] leading-6 text-card-foreground">İşçinin iş kazası sonucu maluliyeti nedeniyle işverenin kusur oranı <span class="font-bold text-accent">%70</span> olarak belirlenmiş, maddi ve manevi tazminata hükmedilmiştir.</p>
+          <div class="mt-5 flex items-center gap-2 border-t border-border pt-3 text-xs text-muted-foreground">
+            <iconify-icon icon="lucide:info" class="text-sm text-primary"></iconify-icon>
+            <span>Özet, kararın tam metni yerine geçmez.</span>
+          </div>
+        </section>
+
+        <section>
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="font-heading text-base font-bold text-foreground">İlgili etiketler</h2>
+            <span class="font-mono text-[10px] text-muted-foreground">03 ETİKET</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="rounded-full border border-primary/35 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary">İş Kazası</span>
+            <span class="rounded-full border border-border bg-secondary px-3 py-2 text-xs font-semibold text-secondary-foreground">Maddi Tazminat</span>
+            <span class="rounded-full border border-border bg-secondary px-3 py-2 text-xs font-semibold text-secondary-foreground">Kusur Oranı</span>
+          </div>
+        </section>
+
+        <section class="overflow-hidden rounded-theme border border-border bg-card">
+          <div class="flex items-center justify-between border-b border-border px-4 py-4">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-primary">Tam metin</p>
+              <h2 class="mt-1 font-heading text-lg font-bold text-card-foreground">Karar Metni</h2>
+            </div>
+            <button aria-label="Metni daralt" class="flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+              <iconify-icon icon="lucide-chevron-up" class="text-lg"></iconify-icon>
+            </button>
+          </div>
+          <div class="space-y-5 px-4 py-5">
+            <div class="border-l-2 border-accent pl-4">
+              <p class="text-sm italic leading-6 text-card-foreground">“İş kazasının meydana gelmesinde davalı işverenin %70, davacının ise %30 oranında kusurlu olduğu kabul edilmelidir.”</p>
+            </div>
+            <div class="space-y-4 text-[14px] leading-6 text-muted-foreground">
+              <p><span class="font-semibold text-card-foreground">Dava:</span> İş kazası nedeniyle maddi ve manevi tazminat istemine ilişkindir.</p>
+              <p>Mahkemece yapılan yargılama sonucunda, davacının işyerinde yürütülen işin niteliği ve çalışma koşulları dikkate alınarak uğradığı sürekli iş göremezlik oranı belirlenmiştir.</p>
+              <p>Dosya kapsamındaki bilirkişi raporu, tanık anlatımları ve iş güvenliği kayıtları birlikte değerlendirildiğinde, işverenin gerekli iş sağlığı ve güvenliği tedbirlerini tam olarak almadığı anlaşılmıştır.</p>
+              <p>Bu nedenle işverenin kusur oranının %70 olarak kabulü ile davacının maddi ve manevi zararlarının karşılanmasına karar verilmesi gerekir.</p>
+            </div>
+            <div class="flex items-center justify-between border-t border-border pt-4">
+              <span class="font-mono text-[10px] text-muted-foreground">Karar metni · 14 sayfa</span>
+              <button class="flex items-center gap-1.5 text-xs font-bold text-primary">
+                Tümünü göster
+                <iconify-icon icon="lucide:arrow-down" class="text-sm"></iconify-icon>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="pb-3">
+          <div class="mb-3 flex items-center justify-between">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-primary">Eşleşen içtihatlar</p>
+              <h2 class="mt-1 font-heading text-lg font-bold text-foreground">Benzer Kararlar</h2>
+            </div>
+            <button class="text-xs font-semibold text-primary">Tümünü gör</button>
+          </div>
+          <div class="-mx-5 flex gap-3 overflow-hidden px-5">
+            <article class="w-[228px] shrink-0 rounded-theme border border-border bg-card p-4">
+              <div class="mb-4 flex items-start justify-between">
+                <span class="rounded-full bg-primary/10 px-2 py-1 text-[10px] font-bold text-primary">%94 benzerlik</span>
+                <iconify-icon icon="lucide:arrow-up-right" class="text-base text-muted-foreground"></iconify-icon>
+              </div>
+              <p class="font-heading text-sm font-bold leading-5 text-card-foreground">İş kazasında işverenin kusur sorumluluğu</p>
+              <p class="mt-3 font-mono text-[11px] leading-5 text-muted-foreground">21. HD · E. 2021/9012<br />K. 2022/3341 · 18.04.2022</p>
+            </article>
+            <article class="w-[228px] shrink-0 rounded-theme border border-border bg-card p-4">
+              <div class="mb-4 flex items-start justify-between">
+                <span class="rounded-full bg-accent/10 px-2 py-1 text-[10px] font-bold text-accent">%88 benzerlik</span>
+                <iconify-icon icon="lucide:arrow-up-right" class="text-base text-muted-foreground"></iconify-icon>
+              </div>
+              <p class="font-heading text-sm font-bold leading-5 text-card-foreground">Maluliyet ve maddi tazminat hesabı</p>
+              <p class="mt-3 font-mono text-[11px] leading-5 text-muted-foreground">10. HD · E. 2020/6721<br />K. 2021/5804 · 09.11.2021</p>
+            </article>
+            <article class="w-[228px] shrink-0 rounded-theme border border-border bg-card p-4">
+              <div class="mb-4 flex items-start justify-between">
+                <span class="rounded-full bg-[#7E9BE8]/15 px-2 py-1 text-[10px] font-bold text-[#9EB4F4]">%82 benzerlik</span>
+                <iconify-icon icon="lucide:arrow-up-right" class="text-base text-muted-foreground"></iconify-icon>
+              </div>
+              <p class="font-heading text-sm font-bold leading-5 text-card-foreground">Manevi tazminatın takdirinde ölçütler</p>
+              <p class="mt-3 font-mono text-[11px] leading-5 text-muted-foreground">21. HD · E. 2019/4482<br />K. 2020/7210 · 16.12.2020</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <div class="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 shadow-[0_-8px_24px_rgba(0,0,0,0.18)] backdrop-blur-xl">
+        <div class="mx-auto flex max-w-[393px] items-center gap-2 px-5 pb-7 pt-3">
+          <button class="flex h-12 flex-1 items-center justify-center gap-2 rounded-theme bg-primary font-heading text-sm font-extrabold text-primary-foreground shadow-lg shadow-primary/20">
+            <iconify-icon icon="lucide:bookmark-plus" class="text-lg"></iconify-icon>
+            Kaydet
+          </button>
+          <button aria-label="Paylaş" class="flex h-12 w-12 shrink-0 items-center justify-center rounded-theme border border-border bg-card text-muted-foreground">
+            <iconify-icon icon="lucide:share-2" class="text-lg"></iconify-icon>
+          </button>
+          <button aria-label="Not ekle" class="flex h-12 w-12 shrink-0 items-center justify-center rounded-theme border border-border bg-card text-muted-foreground">
+            <iconify-icon icon="lucide:notebook-pen" class="text-lg"></iconify-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Icon self-healing: a missing icon name renders as INVISIBLE empty space
+    // (iconify-icon fails silently). Its `status` property ('rendered' |
+    // 'loading' | 'failed') lets us swap failures to a neutral glyph.
+    (function() {
+      var els = document.querySelectorAll('iconify-icon');
+      for (var i = 0; i < els.length; i++) (function(el) {
+        var tries = 0;
+        (function check() {
+          var s = el.status;
+          if (s === 'failed') el.setAttribute('icon', 'lucide:circle');
+          else if (s !== 'rendered' && tries++ < 40) setTimeout(check, 250);
+        })();
+      })(els[i]);
+    })();
+  </script>
+</body>
+</html>

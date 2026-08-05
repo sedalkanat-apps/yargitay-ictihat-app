@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ara — Untitled Project</title>
+
+  <!-- Tailwind CSS (pinned — matches the renderer/screenshot surfaces) -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          background: 'rgb(8 19 33 / <alpha-value>)',
+          foreground: 'rgb(244 247 251 / <alpha-value>)',
+          primary: { DEFAULT: 'rgb(53 185 201 / <alpha-value>)', foreground: 'rgb(6 21 29 / <alpha-value>)' },
+          secondary: { DEFAULT: 'rgb(23 42 61 / <alpha-value>)', foreground: 'rgb(228 237 245 / <alpha-value>)' },
+          accent: { DEFAULT: 'rgb(215 174 88 / <alpha-value>)', foreground: 'rgb(28 22 8 / <alpha-value>)' },
+          muted: { DEFAULT: 'rgb(16 34 53 / <alpha-value>)', foreground: 'rgb(169 185 200 / <alpha-value>)' },
+          card: { DEFAULT: 'rgb(14 29 45 / <alpha-value>)', foreground: 'rgb(244 247 251 / <alpha-value>)' },
+          border: 'rgb(41 64 87 / <alpha-value>)',
+          input: 'rgb(19 38 58 / <alpha-value>)',
+          destructive: { DEFAULT: 'rgb(239 108 108 / <alpha-value>)', foreground: 'rgb(36 10 10 / <alpha-value>)' },
+          success: { DEFAULT: 'rgb(81 197 139 / <alpha-value>)', foreground: 'rgb(6 26 16 / <alpha-value>)' },
+          chart1: 'rgb(53 185 201 / <alpha-value>)',
+          chart2: 'rgb(215 174 88 / <alpha-value>)',
+          chart3: 'rgb(126 155 232 / <alpha-value>)',
+          chart4: 'rgb(81 197 139 / <alpha-value>)',
+          chart5: 'rgb(215 123 155 / <alpha-value>)',
+          ring: 'rgb(53 185 201 / <alpha-value>)',
+        },
+        fontFamily: {
+          heading: ['var(--font-heading, Inter)', 'system-ui'],
+          body: ['var(--font-body, Inter)', 'system-ui'],
+        },
+        borderRadius: { DEFAULT: 'var(--radius, 12px)', theme: 'var(--radius, 12px)' },
+      }}
+    };
+</script>
+
+  <!-- Iconify Web Component -->
+  <script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+
+  <!-- Design Tokens + Custom Classes -->
+  <style>
+  :root {
+    --color-background: #081321;
+    --color-foreground: #F4F7FB;
+    --color-primary: #35B9C9;
+    --color-primary-foreground: #06151D;
+    --color-secondary: #172A3D;
+    --color-secondary-foreground: #E4EDF5;
+    --color-accent: #D7AE58;
+    --color-accent-foreground: #1C1608;
+    --color-muted: #102235;
+    --color-muted-foreground: #A9B9C8;
+    --color-card: #0E1D2D;
+    --color-card-foreground: #F4F7FB;
+    --color-border: #294057;
+    --color-input: #13263A;
+    --color-destructive: #EF6C6C;
+    --color-destructive-foreground: #240A0A;
+    --color-success: #51C58B;
+    --color-success-foreground: #061A10;
+    --color-chart1: #35B9C9;
+    --color-chart2: #D7AE58;
+    --color-chart3: #7E9BE8;
+    --color-chart4: #51C58B;
+    --color-chart5: #D77B9B;
+    --font-heading: 'Manrope', sans-serif;
+    --font-body: 'Source Sans 3', sans-serif;
+    --radius: 12px;
+  }
+
+  body {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 0;
+  }
+  </style>
+</head>
+<body class="bg-background text-foreground m-0 p-0">
+  <div class="h-screen w-screen overflow-hidden">
+    <div class="min-h-screen w-full bg-background text-foreground font-body pb-28">
+      <div class="relative overflow-hidden border-b border-border">
+        <div class="absolute inset-0 opacity-30">
+          <img data-image-id="636a98d3-1266-4df9-8746-929874f74a06" data-image-intent="Photorealistic exterior facade of the Turkish Court of Cassation building in Ankara at dusk, grand neoclassical columns, Turkish flag flying, cinematic blue hour lighting" data-image-type="photo" data-image-aspect="16:9" data-image-background="opaque" alt="Yargıtay binası" class="h-full w-full object-cover" src="https://fwtngjyirchhhysukjxi.supabase.co/storage/v1/object/public/project-images/317cb4d7-0c1f-492c-a456-bf272d527208/636a98d3-1266-4df9-8746-929874f74a06.png" />
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-b from-background/45 via-background/75 to-background"></div>
+        <header class="relative px-5 pt-14 pb-6">
+          <div class="mb-7 flex items-center justify-between">
+            <div>
+              <div class="mb-1 flex items-center gap-2">
+                <div class="h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_rgba(53,185,201,0.8)]"></div>
+                <span class="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">Yargıtay İçtihat</span>
+              </div>
+              <h1 class="font-heading text-2xl font-bold tracking-tight text-foreground">Emsal kararları bulun.</h1>
+            </div>
+            <button aria-label="Bildirimler" class="flex h-10 w-10 items-center justify-center rounded-theme border border-border bg-card/90 text-muted-foreground">
+              <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+            </button>
+          </div>
+
+          <div class="rounded-theme border border-primary/40 bg-card p-2 shadow-lg shadow-black/20">
+            <div class="flex items-center gap-3 rounded-[9px] bg-input px-3 py-3">
+              <iconify-icon icon="lucide:search" class="text-xl text-primary"></iconify-icon>
+              <span class="flex-1 text-sm text-muted-foreground">Örn: kira sözleşmesi fesih, iş kazası tazminat</span>
+              <button aria-label="Sorguyu temizle" class="text-muted-foreground">
+                <iconify-icon icon="lucide:mic" class="text-lg"></iconify-icon>
+              </button>
+            </div>
+            <button class="mt-2 flex w-full items-center justify-center gap-2 rounded-[9px] bg-primary py-3.5 font-heading text-sm font-bold text-primary-foreground">
+              <iconify-icon icon="lucide:scan-search" class="text-lg"></iconify-icon>
+              Emsal Karar Ara
+            </button>
+          </div>
+
+          <div class="mt-3 overflow-hidden rounded-theme border border-border bg-card/95 shadow-lg shadow-black/10">
+            <div class="flex items-center gap-3 border-b border-border px-4 py-3">
+              <div class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 text-primary">
+                <iconify-icon icon="lucide:zap" class="text-sm"></iconify-icon>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-card-foreground">kıdem tazminatı hesaplama</p>
+                <p class="mt-0.5 text-xs text-muted-foreground">Önerilen arama</p>
+              </div>
+              <iconify-icon icon="lucide:arrow-up-left" class="text-base text-muted-foreground"></iconify-icon>
+            </div>
+            <div class="flex items-center gap-3 px-4 py-3">
+              <div class="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                <iconify-icon icon="lucide:search" class="text-sm"></iconify-icon>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-card-foreground">boşanma mal paylaşımı</p>
+                <p class="mt-0.5 text-xs text-muted-foreground">Önerilen arama</p>
+              </div>
+              <iconify-icon icon="lucide:arrow-up-left" class="text-base text-muted-foreground"></iconify-icon>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      <main class="space-y-7 px-5 pt-5">
+        <section class="rounded-theme border border-border bg-card p-4 shadow-sm shadow-black/20">
+          <div class="flex items-start gap-4">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-theme bg-primary/15 text-primary">
+              <iconify-icon icon="lucide:database-zap" class="text-xl"></iconify-icon>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="font-heading text-lg font-bold tracking-tight text-card-foreground">1.842.317 <span class="text-sm font-semibold text-muted-foreground">Yargıtay kararı</span></p>
+              <p class="mt-1 text-sm text-muted-foreground">Tam metin, daire bilgisi ve bağlantılı mevzuat ile taranıyor.</p>
+            </div>
+          </div>
+          <div class="mt-4 flex items-center justify-between border-t border-border pt-3">
+            <div class="flex items-center gap-2 text-xs text-muted-foreground">
+              <span class="h-1.5 w-1.5 rounded-full bg-success"></span>
+              Arşiv güncel
+            </div>
+            <span class="font-mono text-xs text-muted-foreground">Son güncelleme: 3 gün önce</span>
+          </div>
+        </section>
+
+        <section class="relative overflow-hidden rounded-theme border border-accent/35 bg-secondary px-4 py-4">
+          <div class="absolute -right-5 -top-6 h-28 w-28 rounded-full bg-accent/10 blur-2xl"></div>
+          <div class="relative flex gap-3">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-theme bg-accent text-accent-foreground">
+              <iconify-icon icon="lucide:clock-3" class="text-xl"></iconify-icon>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="font-heading text-sm font-bold text-secondary-foreground">Deneme süreniz: 2 gün kaldı</p>
+              <p class="mt-1 text-xs leading-5 text-muted-foreground">Sınırsız karar analizi ve gelişmiş filtrelere erişin.</p>
+              <button class="mt-3 flex items-center gap-1.5 text-sm font-semibold text-accent">
+                Yıllık plana geç
+                <iconify-icon icon="lucide:arrow-right" class="text-base"></iconify-icon>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="font-heading text-base font-bold text-foreground">Son Aramalarım</h2>
+            <button class="text-xs font-semibold text-primary">Tümünü temizle</button>
+          </div>
+          <div class="flex gap-2 overflow-hidden">
+            <button class="shrink-0 rounded-theme border border-border bg-secondary px-3 py-2 text-xs font-semibold text-secondary-foreground">kira sözleşmesi fesih</button>
+            <button class="shrink-0 rounded-theme border border-border bg-secondary px-3 py-2 text-xs font-semibold text-secondary-foreground">trafik kazası maddi manevi tazminat</button>
+            <button class="shrink-0 rounded-theme border border-border bg-secondary px-3 py-2 text-xs font-semibold text-secondary-foreground">işe iade davası</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="font-heading text-base font-bold text-foreground">Popüler Kategoriler</h2>
+            <iconify-icon icon="lucide:layout-grid" class="text-lg text-muted-foreground"></iconify-icon>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <button class="group relative min-h-[104px] overflow-hidden rounded-theme border border-border bg-card p-4 text-left">
+              <div class="absolute right-0 top-0 h-20 w-20 rounded-bl-full bg-primary/10"></div>
+              <span class="relative mb-5 flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 text-primary"><iconify-icon icon="lucide:file-text" class="text-lg"></iconify-icon></span>
+              <p class="relative font-heading text-sm font-bold text-card-foreground">Borçlar Hukuku</p>
+              <p class="relative mt-1 font-mono text-[10px] text-muted-foreground">294.561 karar</p>
+            </button>
+            <button class="group relative min-h-[104px] overflow-hidden rounded-theme border border-border bg-card p-4 text-left">
+              <div class="absolute right-0 top-0 h-20 w-20 rounded-bl-full bg-[#7E9BE8]/10"></div>
+              <span class="relative mb-5 flex h-8 w-8 items-center justify-center rounded-lg bg-[#7E9BE8]/15 text-[#9EB4F4]"><iconify-icon icon="lucide:briefcase-business" class="text-lg"></iconify-icon></span>
+              <p class="relative font-heading text-sm font-bold text-card-foreground">İş Hukuku</p>
+              <p class="relative mt-1 font-mono text-[10px] text-muted-foreground">221.804 karar</p>
+            </button>
+            <button class="group relative min-h-[104px] overflow-hidden rounded-theme border border-border bg-card p-4 text-left">
+              <div class="absolute right-0 top-0 h-20 w-20 rounded-bl-full bg-destructive/10"></div>
+              <span class="relative mb-5 flex h-8 w-8 items-center justify-center rounded-lg bg-destructive/15 text-destructive"><iconify-icon icon="lucide:scale" class="text-lg"></iconify-icon></span>
+              <p class="relative font-heading text-sm font-bold text-card-foreground">Ceza Hukuku</p>
+              <p class="relative mt-1 font-mono text-[10px] text-muted-foreground">412.970 karar</p>
+            </button>
+            <button class="group relative min-h-[104px] overflow-hidden rounded-theme border border-border bg-card p-4 text-left">
+              <div class="absolute right-0 top-0 h-20 w-20 rounded-bl-full bg-accent/10"></div>
+              <span class="relative mb-5 flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-accent"><iconify-icon icon="lucide:heart-handshake" class="text-lg"></iconify-icon></span>
+              <p class="relative font-heading text-sm font-bold text-card-foreground">Aile Hukuku</p>
+              <p class="relative mt-1 font-mono text-[10px] text-muted-foreground">156.218 karar</p>
+            </button>
+            <button class="col-span-2 flex items-center justify-between rounded-theme border border-border bg-card px-4 py-4 text-left">
+              <div class="flex items-center gap-3">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-success/15 text-success"><iconify-icon icon="lucide:landmark" class="text-lg"></iconify-icon></span>
+                <div>
+                  <p class="font-heading text-sm font-bold text-card-foreground">Ticaret Hukuku</p>
+                  <p class="font-mono text-[10px] text-muted-foreground">183.944 karar</p>
+                </div>
+              </div>
+              <iconify-icon icon="lucide:chevron-right" class="text-lg text-muted-foreground"></iconify-icon>
+            </button>
+          </div>
+        </section>
+
+        <button class="flex w-full items-center justify-center gap-2 border-t border-border pt-5 text-sm font-semibold text-primary">
+          <iconify-icon icon="lucide:sliders-horizontal" class="text-lg"></iconify-icon>
+          Gelişmiş Aramaya Geç
+          <iconify-icon icon="lucide:arrow-right" class="text-base"></iconify-icon>
+        </button>
+      </main>
+
+      <nav data-fv-tabbar class="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 backdrop-blur-xl">
+        <div class="mx-auto flex h-[78px] w-full max-w-[393px] items-start justify-center px-5 pt-2">
+          <a data-fv-tab="Ara" data-fv-tab-active="true" href="#" class="flex min-w-[88px] flex-col items-center gap-1 text-primary">
+            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+              <iconify-icon icon="lucide:search" class="text-xl"></iconify-icon>
+            </span>
+            <span class="text-[11px] font-bold">Ara</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <script>
+    // Icon self-healing: a missing icon name renders as INVISIBLE empty space
+    // (iconify-icon fails silently). Its `status` property ('rendered' |
+    // 'loading' | 'failed') lets us swap failures to a neutral glyph.
+    (function() {
+      var els = document.querySelectorAll('iconify-icon');
+      for (var i = 0; i < els.length; i++) (function(el) {
+        var tries = 0;
+        (function check() {
+          var s = el.status;
+          if (s === 'failed') el.setAttribute('icon', 'lucide:circle');
+          else if (s !== 'rendered' && tries++ < 40) setTimeout(check, 250);
+        })();
+      })(els[i]);
+    })();
+  </script>
+</body>
+</html>
