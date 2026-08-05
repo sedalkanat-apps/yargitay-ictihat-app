@@ -12,32 +12,35 @@ Tasarım referansı proje kökündeki `html-export/` klasörüdür — bu klasö
 
 ## 2. MVP Sınırları
 
-**MVP kapsamında olanlar:**
+**MVP kapsamında olanlar** (PRD.md Bölüm 8 ile birebir eşleşir):
 - Kayıt/giriş: email + parola, Apple Sign-In (zorunlu), Google Sign-In (opsiyonel)
-- Arama: Postgres full-text search, temel filtreler (daire, tarih aralığı, esas/karar no, hukuk dalı, dahil/hariç anahtar kelime)
-- Sonuç listesi + Karar Detayı: tam metin + **önceden üretilmiş** (precomputed) AI özeti
+- Arama: tam metin arama, temel filtreler (daire, tarih aralığı, esas/karar no, hukuk dalı, dahil/hariç anahtar kelime)
+- **Konu özetiyle birebir ara**: serbest metinle birebir eşleşme, bulunamazsa semantik benzerlik sıralaması
+- **Arama Geçmişi**: Bugün/Dün/Bu Hafta/Daha Eski gruplaması; her kayıt arama metni + tarih + son açılma zamanı tutar; silinebilir; tek dokunuşla tekrar aranabilir — tamamen cihaz içinde, bulut senkronizasyonu yok
+- Sonuç listesi + Karar Detayı: tam metin + **AI: tek karar özeti** (önceden üretilmiş, tamamen bilgilendirici)
 - **Alıntı Kopyala**: karar metninden standart formatta alıntının panoya kopyalanması
-- Kaydetme + **Dava Dosyası** (tek seviyeli klasörleme, opsiyonel dava adı/referans no alanı — eski adıyla "klasör", davaya özel çalışma alanı olarak yeniden çerçevelenmiştir)
+- Kaydetme + **Dosyalarım** (kararı kaydederken bağlamsal dosya oluşturma/seçme — önceden ayrı bir "dosya oluştur" adımı yoktur; not ekleme; dosya içeriğini listeleme)
+- **AI: çoklu karar özeti** — Dosyalarım'da bir dosyaya kaydedilmiş birden fazla kararın ortak noktalarını özetleme, tamamen bilgilendirici
 - **Kaldığın Yerden Devam Et**: son görüntülenen karar/arama, yerel state ile
 - Hesabım: profil, abonelik durumu, kullanım istatistiği
 - Abonelik: RevenueCat + Apple/Google IAP (haftalık/aylık/yıllık, 3 gün deneme)
-- Premium sınırlaması: sınırsız arama, gelişmiş filtre, semantik arama, sınırsız Dava Dosyası, Alıntı Kopyala
+- Premium sınırlaması: sınırsız arama, gelişmiş filtre, semantik arama, sınırsız Dosya, Alıntı Kopyala
 - Hesap silme, Satın Alımları Geri Yükle (mağaza zorunluluğu)
 - Gerçek, barındırılan Gizlilik Politikası / Kullanım Koşulları sayfaları
 - Yalnızca Türkçe, yalnızca dark tema
 
-**MVP kapsamında OLMAYANLAR (v1.1/v2'ye ertelendi):**
-- Canlı/gerçek zamanlı AI özet üretimi, RAG/citation sistemi, çoklu AI model desteği
+**MVP kapsamında OLMAYANLAR (BACKLOG.md/ROADMAP.md konusu):**
+- Canlı/gerçek zamanlı AI özet üretimi (tek karar özeti önceden üretilir), RAG/citation sistemi, çoklu AI model desteği
 - PDF dışa aktarma
 - Takım/kurum (çoklu kullanıcı) hesapları
 - Offline-first senkronizasyon motoru
 - Bildirim tabanlı kayıtlı arama uyarıları (yalnızca işlemsel bildirimler — yenileme, deneme bitişi — MVP'de var)
-- Çok seviyeli/paylaşılan Dava Dosyaları
+- Çok seviyeli/paylaşılan Dosyalar
 - Arama teriminin tam metinde vurgulanması
 - Web companion uygulama, ayrı admin panel uygulaması
-- Duruşma takvimi, ana ekran widget'ı, karşılaştırmalı AI özet, sorgu genişletme, "günün içtihadı", yıllık kullanım özeti
+- Duruşma takvimi, ana ekran widget'ı, hüküm cümlesi otomatik çıkarımı, sorgu genişletme, "günün içtihadı", yıllık kullanım özeti
 
-Bu listenin dışına çıkan hiçbir özellik onay alınmadan kodlanmaz.
+Bu listenin dışına çıkan hiçbir özellik onay alınmadan kodlanmaz. Kapsamın tek doğruluk kaynağı `PRD.md`'dir; bu bölüm onun kısa özetidir.
 
 ## 3. Teknoloji Yığını
 
@@ -51,7 +54,7 @@ Bu listenin dışına çıkan hiçbir özellik onay alınmadan kodlanmaz.
 - **Font**: expo-font + @expo-google-fonts/manrope + @expo-google-fonts/source-sans-3
 - **Görsel**: expo-image
 - **Safe area**: react-native-safe-area-context
-- **Gesture/animasyon**: react-native-reanimated + react-native-gesture-handler (yalnızca gerçekten gerekli yerlerde — ör. Dava Dosyası kartlarında kaydırma aksiyonu)
+- **Gesture/animasyon**: react-native-reanimated + react-native-gesture-handler (yalnızca gerçekten gerekli yerlerde — ör. Dosya kartlarında kaydırma aksiyonu)
 - **Backend**: Supabase (Postgres + Auth + Storage + Edge Functions)
 - **Abonelik**: RevenueCat (expo-purchases)
 - **Hata takibi**: Sentry
@@ -99,6 +102,8 @@ CLAUDE.md
 
 Not: Expo Router'ın route kökü `app/` proje kökünde değil, `src/app/`'dadır (Metro bunu otomatik algılar). `src/app/` içine iş mantığı yazılmaz; her ekran `src/` altındaki diğer klasörlerdeki hook/component'leri çağıran ince bir kompozisyon katmanıdır.
 
+Not: `kayitlilarim/` route klasör adı teknik bir isimdir ve değiştirilmemiştir; ürünün kullanıcıya görünen adı **"Dosyalarım"**dır (bkz. Bölüm 2, `PRD.md` Bölüm 11).
+
 ## 5. Kod Standartları
 
 - TypeScript strict mode zorunlu; `any` kullanılmaz (gerekirse `unknown` + tip daraltma).
@@ -118,7 +123,7 @@ Not: Expo Router'ın route kökü `app/` proje kökünde değil, `src/app/`'dad�
 ## 7. TypeScript Kuralları
 
 - `tsconfig.json`'da `strict: true`, `noImplicitAny`, `strictNullChecks` açıktır.
-- Tüm veri modelleri (`Decision`, `SavedDecision`, `DavaDosyasi`, `Subscription`, `Profile` vb.) `src/types/` altında tek kaynaktan tanımlanır.
+- Tüm veri modelleri (`Decision`, `SavedDecision`, `Dosya`, `Subscription`, `Profile` vb.) `src/types/` altında tek kaynaktan tanımlanır.
 - Supabase/API yanıtları `any` ile tiplenmez; Zod şeması ile doğrulanır, tip oradan türetilir (`z.infer`).
 
 ## 8. Component Kuralları
@@ -164,7 +169,7 @@ Not: Expo Router'ın route kökü `app/` proje kökünde değil, `src/app/`'dad�
 - Kullanıcıya özel tüm tablolarda Row Level Security zorunludur (`auth.uid() = user_id`).
 - Abonelik iptali her zaman gerçek mağaza yönetim sayfasına yönlendirilir; uygulama içi sahte iptal akışı yazılmaz.
 - Kullanıcı girdisi (arama sorgusu, not, dava adı) hiçbir zaman sanitize edilmeden doğrudan bir LLM prompt'una eklenmez.
-- AI hiçbir zaman hukuki tavsiye vermez; yalnızca içtihat özetler/bulur — bu sınır hem prompt tasarımında hem UI metinlerinde korunur.
+- **AI hukuki tavsiye vermez, yalnızca bilgi özetler ve düzenler** (tek karar özeti, çoklu karar özeti, semantik arama dahil — PRD.md Bölüm 9 ile birebir). Hiçbir AI çıktısı sonuç tahmini veya strateji önerisi içermez; bu sınır hem prompt tasarımında hem UI metinlerinde korunur.
 
 ## 14. Git Commit Kuralları
 
@@ -183,4 +188,21 @@ Not: Expo Router'ın route kökü `app/` proje kökünde değil, `src/app/`'dad�
 - `any` tipi veya gerekçesiz `@ts-ignore` kullanılmaz.
 - Onay alınmadan yeni bağımlılık/kütüphane eklenmez.
 - Onay alınmadan büyük mimari değişiklik yapılmaz — önce plan sunulur, onay sonrası uygulanır.
+
+## 16. Belge Yönetişimi
+
+- `PRD.md`, MVP kapsamını tanımlayan **kilitli belgedir**; kullanıcının açık onayı olmadan değiştirilmez.
+- Yeni özellik fikirleri `PRD.md`'ye eklenmez — yalnızca `BACKLOG.md`'ye eklenir.
+- Yeni sürüm (v1.1, v1.2, v2.0 vb.) planları yalnızca `ROADMAP.md`'ye eklenir.
+- Kod yazarken yalnızca `PRD.md` kapsamındaki özellikler geliştirilir.
+- `PRD.md` kapsamı dışında bir özellik önerildiğinde/istendiğinde önce kullanıcıya sorulur; kodlamaya geçilmez.
+- Kullanıcı onay verirse özellik doğrudan kodlanmaz, önce `BACKLOG.md`'ye eklenir.
+- `PRD.md` yalnızca yeni bir ana sürüm (ör. v2.0) planlanırken, kullanıcının açık talimatıyla güncellenebilir.
+- **Sprint planı `ROADMAP.md` tarafından yönetilir.** Sprint sıralaması bu dosyaya (CLAUDE.md) yazılmaz.
 - Çalışma sırası her zaman şu şekildedir: Analiz → Plan → Onay → Kodlama → Test → Sonuç raporu.
+
+---
+
+## Değişiklik Özeti
+
+**Bu revizyon** (PRD.md ↔ CLAUDE.md denetim raporu sonrası): Bölüm 2'deki MVP listesi `PRD.md` Bölüm 8 ile eşitlendi (Arama Geçmişi, Konu özetiyle birebir ara, AI çoklu karar özeti eklendi; "karşılaştırmalı AI özet" artık MVP-dışı listesinde değil). Ürün dilinde "Dava Dosyası" → "Dosya", "Kayıtlılarım" kavramsal karşılığı → "Dosyalarım" olarak güncellendi (teknik route adı `kayitlilarim/` değişmedi). AI ilkesi PRD.md Bölüm 9 ile birebir hizalandı. Sprint sıralamasının bu dosyada değil `ROADMAP.md`'de tutulacağı netleştirildi.
