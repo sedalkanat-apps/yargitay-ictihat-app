@@ -1,15 +1,14 @@
+import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import {
   AlertTriangle,
   ArrowLeft,
-  Bookmark,
   ChevronDown,
   Filter,
   Search,
   SearchX,
   Share2,
   SlidersHorizontal,
-  UserRound,
 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { FlatList, Pressable, ScrollView, Text, View } from 'react-native';
@@ -20,72 +19,36 @@ import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
 import { IconCircle } from '@/components/ui/IconCircle';
 import { Input } from '@/components/ui/Input';
+import { CustomTabBar } from '@/components/layout/CustomTabBar';
 import { DecisionResultCard } from '@/components/decisions/DecisionResultCard';
+import { useKararlar } from '@/hooks/useKararlar';
 import { colors } from '@/theme';
+import type { KararOzet } from '@/types/karar';
 
 type ViewState = 'loading' | 'success' | 'empty' | 'error';
 
-interface MockDecision {
-  id: string;
-  mahkeme: string;
-  daire: string;
-  hukukDali: string;
-  esasNo: string;
-  kararNo: string;
-  tarih: string;
-  ozet: string;
+// Bu ekranın kendi karar verisi YOKTUR. Aşağıdaki satır, aynı 4 karar
+// kaydını "sonsuz kaydırma" hissi vermek için tekrar tekrar gösterir —
+// hepsi kararRepository'den (useKararlar) gelir, ayrı bir mock liste
+// tutulmaz. Aynı karar birden fazla satırda görünebileceği için satır
+// anahtarı karar id'si DEĞİL, `${karar.id}-${index}` ile üretilir.
+interface SonucSatiri {
+  key: string;
+  karar: KararOzet;
+}
+
+function buildResultRows(kararlar: KararOzet[], count: number): SonucSatiri[] {
+  if (kararlar.length === 0) return [];
+  return Array.from({ length: count }, (_, index) => ({
+    key: `${kararlar[index % kararlar.length].id}-${index}`,
+    karar: kararlar[index % kararlar.length],
+  }));
 }
 
 const SEARCH_QUERY = 'iş kazası tazminat';
 const TOTAL_RESULT_COUNT = 3482;
 const PAGE_SIZE = 6;
 const MAX_ITEMS = 24;
-
-const DECISION_TEMPLATES: Omit<MockDecision, 'id'>[] = [
-  {
-    mahkeme: 'Yargıtay',
-    daire: '21. Hukuk Dairesi',
-    hukukDali: 'İŞ HUKUKU',
-    esasNo: '2022/4521',
-    kararNo: '2023/8890',
-    tarih: '14.03.2023',
-    ozet: 'İşçinin iş kazası sonucu maluliyeti nedeniyle sürekli iş göremezlik tazminatının hesabında gerçek ücretin esas alınması gerekir.',
-  },
-  {
-    mahkeme: 'Yargıtay',
-    daire: '10. Hukuk Dairesi',
-    hukukDali: 'İŞ HUKUKU',
-    esasNo: '2021/7348',
-    kararNo: '2022/11642',
-    tarih: '22.12.2022',
-    ozet: 'İş kazasının tespiti ve maddi tazminat talebi yönünden kusur oranının belirlenmesinde iş güvenliği uzmanı raporu dikkate alınmalıdır.',
-  },
-  {
-    mahkeme: 'Yargıtay',
-    daire: '9. Hukuk Dairesi',
-    hukukDali: 'İŞ HUKUKU',
-    esasNo: '2020/11876',
-    kararNo: '2021/9641',
-    tarih: '18.10.2021',
-    ozet: 'Meslekte kazanma gücü kaybı oranının tespitinde maluliyet raporunun hükme esas alınabilmesi için denetime elverişli olması zorunludur.',
-  },
-  {
-    mahkeme: 'Yargıtay',
-    daire: 'Hukuk Genel Kurulu',
-    hukukDali: 'BORÇLAR HUKUKU',
-    esasNo: '2019/4482',
-    kararNo: '2020/7210',
-    tarih: '16.12.2020',
-    ozet: 'Manevi tazminatın takdirinde tarafların sosyal ve ekonomik durumları ile olayın gelişim şekli birlikte değerlendirilmelidir.',
-  },
-];
-
-function buildMockDecisions(count: number, offset: number): MockDecision[] {
-  return Array.from({ length: count }, (_, i) => ({
-    ...DECISION_TEMPLATES[(offset + i) % DECISION_TEMPLATES.length],
-    id: `mock-${offset + i}`,
-  }));
-}
 
 const FILTER_CHIPS = ['Daire', 'Yıl', 'Esas/Karar No', 'Hukuk/Ceza'];
 
@@ -112,11 +75,15 @@ function DecisionCardSkeleton() {
 
 export default function SonuclarScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const [viewState, setViewState] = useState<ViewState>(DEV_FORCE_VIEW_STATE ?? 'loading');
   const [query, setQuery] = useState(SEARCH_QUERY);
   const [selectedFilterChip, setSelectedFilterChip] = useState('Daire');
-  const [items, setItems] = useState<MockDecision[]>(() => buildMockDecisions(PAGE_SIZE, 0));
+  const [itemCount, setItemCount] = useState(PAGE_SIZE);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+  const kararlarQuery = useKararlar();
+  const items = buildResultRows(kararlarQuery.data ?? [], Math.min(itemCount, MAX_ITEMS));
 
   useEffect(() => {
     if (DEV_FORCE_VIEW_STATE) return;
@@ -130,10 +97,10 @@ export default function SonuclarScreen() {
   };
 
   const handleEndReached = () => {
-    if (isFetchingMore || items.length >= MAX_ITEMS) return;
+    if (isFetchingMore || itemCount >= MAX_ITEMS) return;
     setIsFetchingMore(true);
     setTimeout(() => {
-      setItems((prev) => [...prev, ...buildMockDecisions(PAGE_SIZE, prev.length)]);
+      setItemCount((prev) => Math.min(prev + PAGE_SIZE, MAX_ITEMS));
       setIsFetchingMore(false);
     }, 600);
   };
@@ -216,17 +183,17 @@ export default function SonuclarScreen() {
         {viewState === 'success' && (
           <FlatList
             data={items}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.key}
             renderItem={({ item }) => (
               <DecisionResultCard
-                mahkeme={item.mahkeme}
-                daire={item.daire}
-                hukukDali={item.hukukDali}
-                esasNo={item.esasNo}
-                kararNo={item.kararNo}
-                tarih={item.tarih}
-                ozet={item.ozet}
-                onPress={() => {}}
+                mahkeme={item.karar.mahkeme}
+                daire={item.karar.daire}
+                hukukDali={item.karar.hukukDali}
+                esasNo={item.karar.esasNo}
+                kararNo={item.karar.kararNo}
+                tarih={item.karar.tarih}
+                ozet={item.karar.ozet}
+                onPress={() => router.push({ pathname: '/karar-detay/[id]', params: { id: item.karar.id } })}
                 onSavePress={() => {}}
               />
             )}
@@ -304,40 +271,7 @@ export default function SonuclarScreen() {
         )}
       </View>
 
-      <View style={{ paddingBottom: insets.bottom }} className="absolute inset-x-0 bottom-0 border-t border-border bg-background/95">
-        <View className="mx-auto w-full max-w-[393px] flex-row items-start justify-around px-4 pt-2" style={{ height: 78 }}>
-          <Pressable
-            onPress={() => {}}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: true }}
-            accessibilityLabel="Ara"
-            hitSlop={4}
-            className="min-w-[76px] items-center gap-1">
-            <IconCircle icon={<Search size={20} color={colors.primary.foreground} />} size="md" className="bg-primary shadow-lg shadow-primary/20" />
-            <Text className="text-[11px] font-body-bold text-primary">Ara</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {}}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: false }}
-            accessibilityLabel="Dosyalarım"
-            hitSlop={4}
-            className="min-w-[88px] items-center gap-1">
-            <IconCircle icon={<Bookmark size={20} color={colors.muted.foreground} />} color="muted" size="md" className="bg-transparent" />
-            <Text className="font-body-semibold text-[11px] text-muted-foreground">Dosyalarım</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {}}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: false }}
-            accessibilityLabel="Hesabım"
-            hitSlop={4}
-            className="min-w-[76px] items-center gap-1">
-            <IconCircle icon={<UserRound size={20} color={colors.muted.foreground} />} color="muted" size="md" className="bg-transparent" />
-            <Text className="font-body-semibold text-[11px] text-muted-foreground">Hesabım</Text>
-          </Pressable>
-        </View>
-      </View>
+      <CustomTabBar aktifSekme="ara" altBosluk={insets.bottom} />
     </View>
   );
 }

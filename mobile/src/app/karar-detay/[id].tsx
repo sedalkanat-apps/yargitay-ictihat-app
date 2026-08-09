@@ -1,3 +1,4 @@
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import {
   ArrowLeft,
@@ -9,6 +10,7 @@ import {
   Copy,
   MoreHorizontal,
   Quote,
+  SearchX,
   Sparkles,
 } from 'lucide-react-native';
 import { useState } from 'react';
@@ -22,15 +24,16 @@ import { Chip } from '@/components/ui/Chip';
 import { IconCircle } from '@/components/ui/IconCircle';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { SimilarDecisionCard } from '@/components/decisions/SimilarDecisionCard';
+import { KararKaydetSheet } from '@/components/dosyalar/KararKaydetSheet';
+import { useKarar } from '@/hooks/useKarar';
 import { colors } from '@/theme';
 
-const DECISION = {
-  mahkeme: 'Yargıtay',
-  daire: '21. Hukuk Dairesi',
-  hukukDali: 'İŞ HUKUKU · İŞ KAZASI',
-  esasNo: '2022/4521',
-  kararNo: '2023/8890',
-  tarih: '14.03.2023',
+// Karar kimliği (mahkeme/daire/esas/karar/tarih/hukukDali) BURADA TUTULMAZ —
+// route'taki id ile kararRepository'den okunur (useKarar). Aşağıdaki içerik
+// yalnızca bu ekrana özgü, kararRepository'nin kapsamı dışındaki zengin
+// içeriktir (AI özeti, tam metin, ilgili kanunlar, benzer kararlar) ve
+// hangi karar açılırsa açılsın örnek/demo amaçlı gösterilir.
+const KARAR_DETAY_ICERIGI = {
   baslik: 'İş kazasında kusur oranı ve tazminat',
   anaHukum:
     'İş kazasının meydana gelmesinde davalı işverenin %70, davacının ise %30 oranında kusurlu olduğu kabul edilmelidir.',
@@ -86,13 +89,53 @@ const BENZER_KARARLAR = [
   },
 ];
 
+function YukleniyorEkrani() {
+  return (
+    <View className="flex-1 items-center justify-center bg-background">
+      <StatusBar style="light" />
+      <Text className="text-sm text-muted-foreground">Yükleniyor…</Text>
+    </View>
+  );
+}
+
+function KararBulunamadiEkrani({ onGeriDon }: { onGeriDon: () => void }) {
+  return (
+    <View className="flex-1 items-center justify-center gap-3 bg-background px-8">
+      <StatusBar style="light" />
+      <IconCircle icon={<SearchX size={22} color={colors.muted.foreground} />} color="muted" size="lg" />
+      <Text className="text-center font-heading text-base text-foreground">Karar bulunamadı</Text>
+      <Text className="text-center text-sm text-muted-foreground">
+        Aradığınız karara ulaşılamadı. Kaldırılmış ya da hatalı bir bağlantı olabilir.
+      </Text>
+      <Button label="Geri Dön" variant="secondary" onPress={onGeriDon} />
+    </View>
+  );
+}
+
 export default function KararDetayScreen() {
   const insets = useSafeAreaInsets();
-  const [isFullTextExpanded, setIsFullTextExpanded] = useState(false);
+  const router = useRouter();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const kararId = typeof id === 'string' ? id : '';
 
-  const visibleParagraflar = isFullTextExpanded
-    ? TAM_METIN_PARAGRAFLARI
-    : TAM_METIN_PARAGRAFLARI.slice(0, 2);
+  const [isFullTextExpanded, setIsFullTextExpanded] = useState(false);
+  const [sheetAcik, setSheetAcik] = useState(false);
+
+  const { data: kararOzeti, isLoading, isError } = useKarar(kararId);
+
+  const visibleParagraflar = isFullTextExpanded ? TAM_METIN_PARAGRAFLARI : TAM_METIN_PARAGRAFLARI.slice(0, 2);
+
+  if (!kararId) {
+    return <KararBulunamadiEkrani onGeriDon={() => router.back()} />;
+  }
+
+  if (isLoading) {
+    return <YukleniyorEkrani />;
+  }
+
+  if (isError || !kararOzeti) {
+    return <KararBulunamadiEkrani onGeriDon={() => router.back()} />;
+  }
 
   return (
     <View className="flex-1 bg-background">
@@ -102,7 +145,7 @@ export default function KararDetayScreen() {
         <View className="flex-row items-center gap-3">
           {/* Geri butonu */}
           <Pressable
-            onPress={() => {}}
+            onPress={() => router.back()}
             accessibilityRole="button"
             accessibilityLabel="Geri dön"
             hitSlop={8}
@@ -112,7 +155,7 @@ export default function KararDetayScreen() {
           <View className="min-w-0 flex-1">
             <Text className="text-2xs font-body-bold uppercase tracking-wider text-primary">Karar Detayı</Text>
             <Text numberOfLines={1} className="mt-0.5 font-heading text-sm text-foreground">
-              {DECISION.daire}
+              {kararOzeti.daire}
             </Text>
           </View>
           <Pressable
@@ -125,7 +168,7 @@ export default function KararDetayScreen() {
           </Pressable>
         </View>
         <View className="mt-3 flex-row items-center justify-between">
-          <Text className="font-mono text-2xs font-semibold text-muted-foreground">{DECISION.hukukDali}</Text>
+          <Text className="font-mono text-2xs font-semibold text-muted-foreground">{kararOzeti.hukukDali}</Text>
           <View className="flex-row items-center gap-1.5">
             <BadgeCheck size={14} color={colors.success.DEFAULT} />
             <Text className="text-2xs font-body-semibold text-success">Güncel içtihat</Text>
@@ -137,21 +180,21 @@ export default function KararDetayScreen() {
         {/* Karar kimliği */}
         <View className="mb-6">
           <Text className="text-xs font-body-semibold text-primary">
-            {DECISION.mahkeme} {DECISION.daire}
+            {kararOzeti.mahkeme} {kararOzeti.daire}
           </Text>
-          <Text className="mt-2 font-heading text-xl text-foreground">{DECISION.baslik}</Text>
+          <Text className="mt-2 font-heading text-xl text-foreground">{KARAR_DETAY_ICERIGI.baslik}</Text>
           <View className="mt-4 flex-row items-center justify-between rounded-theme border border-border bg-card px-3 py-3">
             <View>
               <Text className="text-2xs font-body-bold uppercase tracking-wider text-muted-foreground">Esas</Text>
-              <Text className="mt-1 font-mono text-sm font-body-semibold text-card-foreground">{DECISION.esasNo}</Text>
+              <Text className="mt-1 font-mono text-sm font-body-semibold text-card-foreground">{kararOzeti.esasNo}</Text>
             </View>
             <View>
               <Text className="text-2xs font-body-bold uppercase tracking-wider text-muted-foreground">Karar</Text>
-              <Text className="mt-1 font-mono text-sm font-body-semibold text-card-foreground">{DECISION.kararNo}</Text>
+              <Text className="mt-1 font-mono text-sm font-body-semibold text-card-foreground">{kararOzeti.kararNo}</Text>
             </View>
             <View>
               <Text className="text-2xs font-body-bold uppercase tracking-wider text-muted-foreground">Tarih</Text>
-              <Text className="mt-1 font-mono text-sm font-body-semibold text-card-foreground">{DECISION.tarih}</Text>
+              <Text className="mt-1 font-mono text-sm font-body-semibold text-card-foreground">{kararOzeti.tarih}</Text>
             </View>
           </View>
         </View>
@@ -212,7 +255,7 @@ export default function KararDetayScreen() {
         {/* Ana Hüküm */}
         <View className="mb-6 rounded-theme border border-l-4 border-accent bg-secondary p-4">
           <Quote size={18} color={colors.accent.DEFAULT} />
-          <Text className="mt-2 text-sm italic leading-6 text-secondary-foreground">{DECISION.anaHukum}</Text>
+          <Text className="mt-2 text-sm italic leading-6 text-secondary-foreground">{KARAR_DETAY_ICERIGI.anaHukum}</Text>
         </View>
 
         {/* Tam Karar Metni */}
@@ -242,7 +285,9 @@ export default function KararDetayScreen() {
               </Text>
             ))}
             <View className="flex-row items-center justify-between border-t border-border pt-4">
-              <Text className="font-mono text-2xs text-muted-foreground">Karar metni · {DECISION.sayfaSayisi} sayfa</Text>
+              <Text className="font-mono text-2xs text-muted-foreground">
+                Karar metni · {KARAR_DETAY_ICERIGI.sayfaSayisi} sayfa
+              </Text>
               <Pressable
                 onPress={() => setIsFullTextExpanded((prev) => !prev)}
                 accessibilityRole="button"
@@ -281,7 +326,7 @@ export default function KararDetayScreen() {
           <Button
             label="Dosyalarıma Kaydet"
             icon={<Bookmark size={16} color={colors.primary.foreground} />}
-            onPress={() => {}}
+            onPress={() => setSheetAcik(true)}
             className="flex-1"
           />
           <Button
@@ -292,6 +337,16 @@ export default function KararDetayScreen() {
           />
         </View>
       </View>
+
+      <KararKaydetSheet
+        gorunur={sheetAcik}
+        kararId={kararOzeti.id}
+        onKapat={() => setSheetAcik(false)}
+        onKaydedildi={(dosyaId) => {
+          setSheetAcik(false);
+          router.push({ pathname: '/dosya-detay/[id]', params: { id: dosyaId } });
+        }}
+      />
     </View>
   );
 }

@@ -5,7 +5,6 @@ import {
   ArrowUpLeft,
   Bell,
   BriefcaseBusiness,
-  Bookmark,
   ChevronRight,
   Clock3,
   DatabaseZap,
@@ -18,7 +17,6 @@ import {
   Scale,
   Search,
   SlidersHorizontal,
-  UserRound,
   Zap,
 } from 'lucide-react-native';
 import { useState } from 'react';
@@ -31,6 +29,7 @@ import { Chip } from '@/components/ui/Chip';
 import { IconCircle, type IconCircleColor } from '@/components/ui/IconCircle';
 import { Input } from '@/components/ui/Input';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { CustomTabBar } from '@/components/layout/CustomTabBar';
 import { colors, shadows } from '@/theme';
 
 const HERO_IMAGE_URL =
@@ -277,40 +276,7 @@ export default function AraScreen() {
         </View>
       </ScrollView>
 
-      <View style={{ paddingBottom: insets.bottom }} className="absolute inset-x-0 bottom-0 border-t border-border bg-background/95">
-        <View className="mx-auto w-full max-w-[393px] flex-row items-start justify-around px-4 pt-2" style={{ height: 78 }}>
-          <Pressable
-            onPress={() => {}}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: true }}
-            accessibilityLabel="Ara"
-            hitSlop={4}
-            className="min-w-[76px] items-center gap-1">
-            <IconCircle icon={<Search size={20} color={colors.primary.foreground} />} size="md" className="bg-primary shadow-lg shadow-primary/20" />
-            <Text className="text-[11px] font-body-bold text-primary">Ara</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {}}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: false }}
-            accessibilityLabel="Kayıtlılarım"
-            hitSlop={4}
-            className="min-w-[88px] items-center gap-1">
-            <IconCircle icon={<Bookmark size={20} color={colors.muted.foreground} />} color="muted" size="md" className="bg-transparent" />
-            <Text className="font-body-semibold text-[11px] text-muted-foreground">Kayıtlılarım</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {}}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: false }}
-            accessibilityLabel="Hesabım"
-            hitSlop={4}
-            className="min-w-[76px] items-center gap-1">
-            <IconCircle icon={<UserRound size={20} color={colors.muted.foreground} />} color="muted" size="md" className="bg-transparent" />
-            <Text className="font-body-semibold text-[11px] text-muted-foreground">Hesabım</Text>
-          </Pressable>
-        </View>
-      </View>
+      <CustomTabBar aktifSekme="ara" altBosluk={insets.bottom} />
     </KeyboardAvoidingView>
   );
 }

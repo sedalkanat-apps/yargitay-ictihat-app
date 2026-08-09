@@ -10,6 +10,7 @@ interface CardProps {
   padding?: CardPadding;
   onPress?: () => void;
   accessibilityLabel?: string;
+  accessibilityHint?: string;
   className?: string;
 }
 
@@ -29,6 +30,7 @@ export function Card({
   padding = 'md',
   onPress,
   accessibilityLabel,
+  accessibilityHint,
   className = '',
 }: CardProps) {
   const classes = `rounded-theme border ${variantStyles[variant]} ${paddingStyles[padding]} ${className}`;
@@ -39,6 +41,7 @@ export function Card({
         onPress={onPress}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
+        accessibilityHint={accessibilityHint}
         className={classes}>
         {children}
       </Pressable>

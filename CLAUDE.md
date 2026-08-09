@@ -12,15 +12,15 @@ Tasarım referansı proje kökündeki `html-export/` klasörüdür — bu klasö
 
 ## 2. MVP Sınırları
 
-**MVP kapsamında olanlar** (PRD.md Bölüm 8 ile birebir eşleşir):
+**MVP kapsamında olanlar** (Dosyalarım maddesi hariç `PRD.md` Bölüm 8 ile eşleşir — bkz. bu bölümün sonundaki not):
 - Kayıt/giriş: email + parola, Apple Sign-In (zorunlu), Google Sign-In (opsiyonel)
 - Arama: tam metin arama, temel filtreler (daire, tarih aralığı, esas/karar no, hukuk dalı, dahil/hariç anahtar kelime)
 - **Konu özetiyle birebir ara**: serbest metinle birebir eşleşme, bulunamazsa semantik benzerlik sıralaması
 - **Arama Geçmişi**: Bugün/Dün/Bu Hafta/Daha Eski gruplaması; her kayıt arama metni + tarih + son açılma zamanı tutar; silinebilir; tek dokunuşla tekrar aranabilir — tamamen cihaz içinde, bulut senkronizasyonu yok
 - Sonuç listesi + Karar Detayı: tam metin + **AI: tek karar özeti** (önceden üretilmiş, tamamen bilgilendirici)
 - **Alıntı Kopyala**: karar metninden standart formatta alıntının panoya kopyalanması
-- Kaydetme + **Dosyalarım** (kararı kaydederken bağlamsal dosya oluşturma/seçme — önceden ayrı bir "dosya oluştur" adımı yoktur; not ekleme; dosya içeriğini listeleme)
-- **AI: çoklu karar özeti** — Dosyalarım'da bir dosyaya kaydedilmiş birden fazla kararın ortak noktalarını özetleme, tamamen bilgilendirici
+- **Dosyalarım**: Müvekkil → Dosya → Kaydedilen Kararlar + Notlar hiyerarşisi. Müvekkil gerçek veya tüzel kişi olabilir, birden fazla dosyası olabilir. Dosya adı esas no yoksa konu/taşınmaz bilgisiyle açılır, esas no atandığında yeniden adlandırılabilir. Kararı kaydederken bağlamsal olarak müvekkil ve dosya oluşturma/seçme — önceden ayrı bir "oluştur" adımı yoktur. Aynı karar birden fazla dosyaya kaydedilebilir.
+- **AI: çoklu karar özeti** — bir dosyaya kaydedilmiş birden fazla kararın ortak noktalarını özetleme, tamamen bilgilendirici
 - **Kaldığın Yerden Devam Et**: son görüntülenen karar/arama, yerel state ile
 - Hesabım: profil, abonelik durumu, kullanım istatistiği
 - Abonelik: RevenueCat + Apple/Google IAP (haftalık/aylık/yıllık, 3 gün deneme)
@@ -39,8 +39,9 @@ Tasarım referansı proje kökündeki `html-export/` klasörüdür — bu klasö
 - Arama teriminin tam metinde vurgulanması
 - Web companion uygulama, ayrı admin panel uygulaması
 - Duruşma takvimi, ana ekran widget'ı, hüküm cümlesi otomatik çıkarımı, sorgu genişletme, "günün içtihadı", yıllık kullanım özeti
+- Müvekkil genel belgeleri (Vekaletname vb.), PDF/dosya yükleme, OCR, kalıcı Alıntılar, belge analizi
 
-Bu listenin dışına çıkan hiçbir özellik onay alınmadan kodlanmaz. Kapsamın tek doğruluk kaynağı `PRD.md`'dir; bu bölüm onun kısa özetidir.
+Bu listenin dışına çıkan hiçbir özellik onay alınmadan kodlanmaz. Kapsamın tek doğruluk kaynağı `PRD.md`'dir; bu bölüm onun kısa özetidir — **Dosyalarım maddesi hariç**: Müvekkil → Dosya → Kaydedilen Kararlar + Notlar hiyerarşisi onaylandı (bkz. `ROADMAP.md` v1.0), ancak `PRD.md` Bölüm 11 hâlâ eski tek seviyeli "Dosya" modelini tanımlıyor ve kilitli olduğu için değiştirilmedi. Bu, resmi olarak çözülmemiş bir `PRD.md` ↔ proje yönü çelişkisidir.
 
 ## 3. Teknoloji Yığını
 
@@ -200,9 +201,14 @@ Not: `kayitlilarim/` route klasör adı teknik bir isimdir ve değiştirilmemiş
 - `PRD.md` yalnızca yeni bir ana sürüm (ör. v2.0) planlanırken, kullanıcının açık talimatıyla güncellenebilir.
 - **Sprint planı `ROADMAP.md` tarafından yönetilir.** Sprint sıralaması bu dosyaya (CLAUDE.md) yazılmaz.
 - Çalışma sırası her zaman şu şekildedir: Analiz → Plan → Onay → Kodlama → Test → Sonuç raporu.
+- **Gerçek Yargıtay/mevzuat.gov.tr veri kaynağı mimarisi** (Go/No-Go kapısı, cache/yeniden doğrulama
+  politikası, kimlik stratejisi, AI veri ayrımı) `VERI_MIMARISI.md`'de tutulur — yeni bir kullanıcı
+  özelliği tanımlamaz, `PRD.md`/`BACKLOG.md`/`ROADMAP.md` kapsamını değiştirmez.
 
 ---
 
 ## Değişiklik Özeti
 
 **Bu revizyon** (PRD.md ↔ CLAUDE.md denetim raporu sonrası): Bölüm 2'deki MVP listesi `PRD.md` Bölüm 8 ile eşitlendi (Arama Geçmişi, Konu özetiyle birebir ara, AI çoklu karar özeti eklendi; "karşılaştırmalı AI özet" artık MVP-dışı listesinde değil). Ürün dilinde "Dava Dosyası" → "Dosya", "Kayıtlılarım" kavramsal karşılığı → "Dosyalarım" olarak güncellendi (teknik route adı `kayitlilarim/` değişmedi). AI ilkesi PRD.md Bölüm 9 ile birebir hizalandı. Sprint sıralamasının bu dosyada değil `ROADMAP.md`'de tutulacağı netleştirildi.
+
+**Sonraki revizyon** (Dosyalarım hiyerarşi onayı): Bölüm 2'deki "Dosyalarım" maddesi Müvekkil → Dosya → Kaydedilen Kararlar + Notlar hiyerarşisini yansıtacak şekilde güncellendi. Müvekkil genel belgeleri, PDF/dosya yükleme, OCR, kalıcı Alıntılar ve belge analizi MVP-dışı listesine eklendi (`BACKLOG.md` v1.1 ile eşleşir). Bu değişiklik `PRD.md` Bölüm 11 ile çelişmektedir — `PRD.md` kilitli olduğu için değiştirilmedi, çelişki bilerek belgelenmiştir.

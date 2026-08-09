@@ -1,7 +1,7 @@
-# Product Requirements Document (PRD)
+# Product Requirements Document (PRD) — PRD v1.0-R2
 ## Yargıtay İçtihat — AI Destekli Dava Hazırlık Asistanı
 
-*Versiyon 2.0 — Bu belge, Sprint 1-3 sonundaki ürün revizyonlarını içeren güncel ve kilitli MVP kapsam belgesidir. Değişiklik yalnızca kullanıcının açık onayıyla yapılır (bkz. `CLAUDE.md` Bölüm 16). Yeni özellik fikirleri `BACKLOG.md`'ye, sürüm planları `ROADMAP.md`'ye yazılır — bu belgeye değil.*
+*PRD v1.0-R2 — Bu belge, Dosyalarım veri modelinin Müvekkil → Dosya hiyerarşisine uyarlanmasını içeren güncel ve kilitli MVP kapsam belgesidir. Değişiklik yalnızca kullanıcının açık onayıyla yapılır (bkz. `CLAUDE.md` Bölüm 16). Yeni özellik fikirleri `BACKLOG.md`'ye, sürüm planları `ROADMAP.md`'ye yazılır — bu belgeye değil.*
 
 ---
 
@@ -57,10 +57,10 @@ Fark, aramadan sonra ne olduğunda yatar: kullanıcı bir karar bulur → AI öz
 | 1 | Araştırmaya başlama | Dava konusuyla ilgili emsal aramaya başlamak (yeni arama veya Arama Geçmişi'nden devam) | Ara ekranı: arama kutusu + Arama Geçmişi | Yok |
 | 2 | Sonuçları daraltma | Uygun emsalleri bulmak | Filtrelenebilir sonuç listesi | "Konu özetiyle birebir ara": birebir eşleşme, yoksa semantik benzerlik |
 | 3 | Karar detayını değerlendirme | Kararın davasına uygunluğunu hızlıca anlamak | Tam metin + özet + benzer kararlar | Tek karar özeti — tamamen bilgilendirici |
-| 4 | "Dosyalarıma Kaydet" | Kararı form doldurmadan kaydetmek | Dosya yoksa "Yeni Dosya Oluştur" / "Mevcut Dosyaya Kaydet" seçimi; dosya oluşunca karar otomatik eklenir | Yok |
+| 4 | "Dosyalarıma Kaydet" | Kararı form doldurmadan kaydetmek | Müvekkil seç (yoksa oluştur) → Dosya seç (yoksa oluştur) → karar otomatik eklenir; son kullanılan müvekkil ve dosya varsayılan seçili gelir, akış minimum sürtünmeyle tasarlanır | Yok |
 | 5 | Alıntıyı dilekçeye taşıma | Kararın ilgili kısmını kendi dilekçesine eklemek | "Alıntı Kopyala": Esas/Karar No + tarih + alıntı metni panoya kopyalanır | Yok |
 | 6 | Arama Geçmişine dönme | Aynı dava için günler sonra kaldığı yerden devam etmek | Bugün/Dün/Bu Hafta/Daha Eski gruplaması, tek dokunuşla tekrar arama, silme — cihaz içi | Yok |
-| 7 | Dosyayı toparlama | Dilekçeden önce dava için topladığı tüm emsalleri bir arada görmek | Dosyalarım ekranında ilgili dosyaya ait tüm kararlar/notlar | Birden fazla kararın ortak noktalarını özetleme — bilgilendirici |
+| 7 | Dosyayı toparlama | Dilekçeden önce dava için topladığı tüm emsalleri bir arada görmek | Müvekkillerim → müvekkil → Dosyalar → ilgili dosyaya ait tüm kararlar/notlar | Birden fazla kararın ortak noktalarını özetleme — bilgilendirici |
 | 8 | Dilekçeyi tamamlama | Araştırmasını dilekçesine yansıtıp süreci bitirmek | Kullanıcı kendi belge editöründe tamamlar; dosya "tamamlandı" işaretlenebilir | **Yok — kesin sınır** |
 
 ## 8. MVP Kapsamı
@@ -71,7 +71,7 @@ Fark, aramadan sonra ne olduğunda yatar: kullanıcı bir karar bulur → AI öz
 - **Arama Geçmişi**: Bugün / Dün / Bu Hafta / Daha Eski gruplaması; her kayıt arama metni + tarih + son açılma zamanı tutar; kayıt silinebilir; tek dokunuşla tekrar aranabilir; **tamamen cihaz içinde saklanır, bulut senkronizasyonu yoktur**
 - Sonuç listesi + Karar Detayı: tam metin + **AI özeti (tek karar)**
 - **Alıntı Kopyala**: karar metninden standart formatta alıntının panoya kopyalanması
-- **Dosyalarım**: kararı kaydederken bağlamsal olarak yeni dosya oluşturma veya mevcut dosyaya ekleme (ayrı, öncül bir "dosya oluştur" adımı yoktur); dosya içi not ekleme; dosya içeriğini listeleme
+- **Dosyalarım**: Müvekkil → Dosyalar → Kaydedilen Kararlar + Notlar hiyerarşisi; kararı kaydederken bağlamsal olarak müvekkil ve dosya oluşturma/seçme (ayrı, öncül bir "oluştur" adımı yoktur, son kullanılanlar varsayılan gelir)
 - **AI: birden fazla kararın ortak noktalarını özetleme** (Dosyalarım içinde)
 - Kaldığın Yerden Devam Et: son görüntülenen karar/arama
 - Hesabım: profil, abonelik durumu, kullanım istatistiği
@@ -111,11 +111,33 @@ Bu ilke şu şekillerde uygulanır:
 
 ## 11. Dosyalarım
 
-- Eski adıyla "Kayıtlılarım" — ürün genelinde artık yalnızca **"Dosyalarım"** adı kullanılır.
-- Bir "Dosya", kullanıcının bir dava için topladığı kararların ve notların bulunduğu çalışma alanıdır.
-- **Dosya oluşturma bağlamsaldır**: kullanıcı önceden bir form doldurup dosya açmaz. Bir kararı kaydederken ("Dosyalarıma Kaydet") hiç dosyası yoksa "Yeni Dosya Oluştur" veya "Mevcut Dosyaya Kaydet" seçeneği sunulur; dosya oluşturulduğunda karar otomatik olarak içine eklenir.
-- Her kayıtlı karara kısa bir not eklenebilir.
-- Dosya içeriği (kararlar + notlar) listelenir; birden fazla karar varsa AI ortak nokta özeti sunulur (bkz. Bölüm 9).
+Eski adıyla "Kayıtlılarım" — ürün genelinde artık yalnızca **"Dosyalarım"** adı kullanılır (alt navigasyon). Bu isim altında gerçek avukat çalışma düzenini yansıtan bir hiyerarşi bulunur:
+
+```
+Müvekkil
+→ Dosyalar (bir veya daha fazla)
+    → Kaydedilen Kararlar
+    → Notlar
+```
+
+**Ekran isimleri**: Alt navigasyon — "Dosyalarım"; birinci seviye ekran başlığı — "Müvekkillerim" (müvekkil listesi); müvekkil içindeki ikinci seviye — "Dosyalar".
+
+**Müvekkil**:
+- Gerçek kişi veya tüzel kişi olabilir.
+- Bir müvekkilin birden fazla dosyası olabilir.
+
+**Dosya**:
+- Esas numarası henüz yoksa dosya adı konu veya taşınmaz bilgisi olabilir (ör. "Fikirtepe Daire 322 Tahliye").
+- Esas numarası alındığında dosya adı buna göre güncellenebilir (ör. "2026/3266").
+- Aynı karar birden fazla dosyaya kaydedilebilir.
+
+**Dosya oluşturma bağlamsaldır**: kullanıcı önceden form doldurup müvekkil veya dosya açmaz. "Dosyalarıma Kaydet" akışında sırasıyla müvekkil (yoksa oluştur) ve dosya (yoksa oluştur) seçilir; karar seçilen dosyaya otomatik eklenir. Son kullanılan müvekkil ve dosya varsayılan seçili gelir — akış minimum sürtünmeyle tasarlanır.
+
+**Dosya içeriği** (MVP kapsamı bununla sınırlıdır):
+- Kaydedilen Kararlar
+- Notlar (her kayıtlı karara kısa not eklenebilir)
+
+Belgeler, PDF yükleme, OCR ve kalıcı Alıntılar bu sürümün kapsamı dışındadır (bkz. `BACKLOG.md` v1.1). Bir dosyada birden fazla karar varsa AI ortak nokta özeti sunulur (bkz. Bölüm 9).
 
 ## 12. Premium Özellikler
 
@@ -124,9 +146,10 @@ Bu ilke şu şekillerde uygulanır:
 | Arama | Sınırlı | Sınırsız |
 | Gelişmiş filtreleme | Kilitli | Açık |
 | "Konu özetiyle birebir arama" | Kilitli | Açık |
-| Dosya sayısı | 1 dosya ile sınırlı | Sınırsız |
+| Müvekkil sayısı | En fazla 3 | Sınırsız |
+| Dosya sayısı (müvekkil başına) | Sınırsız | Sınırsız |
 | Alıntı Kopyala | Kilitli | Açık |
-| AI özet erişimi | Kısıtlı önizleme | Tam erişim |
+| AI kullanımı | Kullanım limiti | Sınırsız |
 | Öncelikli destek | Yok | Var |
 
 ## 13. Bildirimler
@@ -193,3 +216,7 @@ Yalnızca işlemsel bildirimler: abonelik yenileme hatırlatması, deneme süres
 - Ton: güvenilir, sade, "deneyimli bir meslektaş" hissi — otoriter değil, yardımcı.
 - Slogan: "Emsal kararlar, saniyeler içinde."
 - Ses tonu ilkesi: Sonuç garantisi çağrıştıran ifadeler ("davanızı kazandırır" vb.) hiçbir metinde kullanılmaz.
+
+---
+
+*Bu revizyon Dosyalarım veri modelinin gerçek avukat çalışma düzenine uyarlanması amacıyla yapılmıştır.*
