@@ -1,8 +1,19 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
-import { error } from "../_shared/response.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
+import { success, error } from "../_shared/response.ts";
 
-Deno.serve((req) => {
+Deno.serve(async (req) => {
   const requestId = crypto.randomUUID();
+
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_ANON_KEY")!,
+    {
+      global: {
+        headers: { Authorization: req.headers.get("Authorization") ?? "" },
+      },
+    },
+  );
 
   if (req.method !== "GET") {
     return error(405, "METHOD_NOT_ALLOWED", "Method Not Allowed", requestId);
@@ -33,5 +44,19 @@ Deno.serve((req) => {
     limit = Number(limitParam);
   }
 
-  return error(501, "NOT_IMPLEMENTED", "Endpoint not implemented yet", requestId);
+  const sortParam = searchParams.get("sort");
+  let sort = "relevance";
+  if (sortParam !== null) {
+    if (sortParam !== "relevance" && sortParam !== "date") {
+      return error(400, "INVALID_SORT", "Query parameter 'sort' must be 'relevance' or 'date'", requestId);
+    }
+    sort = sortParam;
+  }
+
+  const { error: dbError } = await supabase.from("kararlar").select("id").limit(1);
+  if (dbError) {
+    return error(500, "DATABASE_ERROR", dbError.message, requestId);
+  }
+
+  return success({ connected: true }, requestId);
 });

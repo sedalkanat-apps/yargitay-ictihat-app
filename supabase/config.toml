@@ -426,4 +426,4 @@ entrypoint = "./functions/health/index.ts"
 
 [functions.kararlar-search]
 enabled = true
-verify_jwt = false
+verify_jwt = true
