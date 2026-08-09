@@ -8,9 +8,20 @@ Deno.serve((req) => {
     return error(405, "METHOD_NOT_ALLOWED", "Method Not Allowed", requestId);
   }
 
-  const q = new URL(req.url).searchParams.get("q");
+  const searchParams = new URL(req.url).searchParams;
+
+  const q = searchParams.get("q");
   if (!q || q.trim() === "") {
     return error(400, "INVALID_QUERY", "Query parameter 'q' is required", requestId);
+  }
+
+  const pageParam = searchParams.get("page");
+  let page = 1;
+  if (pageParam !== null) {
+    if (!/^\d+$/.test(pageParam) || Number(pageParam) < 1) {
+      return error(400, "INVALID_PAGE", "Query parameter 'page' must be a positive integer", requestId);
+    }
+    page = Number(pageParam);
   }
 
   return error(501, "NOT_IMPLEMENTED", "Endpoint not implemented yet", requestId);
