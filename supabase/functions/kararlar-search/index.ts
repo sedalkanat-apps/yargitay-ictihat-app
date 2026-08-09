@@ -24,5 +24,14 @@ Deno.serve((req) => {
     page = Number(pageParam);
   }
 
+  const limitParam = searchParams.get("limit");
+  let limit = 20;
+  if (limitParam !== null) {
+    if (!/^\d+$/.test(limitParam) || Number(limitParam) < 1 || Number(limitParam) > 100) {
+      return error(400, "INVALID_LIMIT", "Query parameter 'limit' must be between 1 and 100", requestId);
+    }
+    limit = Number(limitParam);
+  }
+
   return error(501, "NOT_IMPLEMENTED", "Endpoint not implemented yet", requestId);
 });
