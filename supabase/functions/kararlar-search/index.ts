@@ -53,10 +53,26 @@ Deno.serve(async (req) => {
     sort = sortParam;
   }
 
-  const { error: dbError } = await supabase.from("kararlar").select("id").limit(1);
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let dbQuery = supabase
+    .from("kararlar")
+    .select("id, mahkeme, daire, esas_no, karar_no, tarih, hukuk_dali, ozet")
+    .textSearch("arama_vektoru", q, { type: "plain", config: "simple" })
+    .range(from, to);
+
+  // kararlar_arama_vektoru_idx bir ts_rank fonksiyonu içermiyor, bu yüzden
+  // sort=relevance için ek bir sıralama uygulanmıyor (eşleşme sırası kullanılır);
+  // sort=date için tarih alanına göre en yeniden en eskiye sıralanır.
+  if (sort === "date") {
+    dbQuery = dbQuery.order("tarih", { ascending: false });
+  }
+
+  const { data, error: dbError } = await dbQuery;
   if (dbError) {
     return error(500, "DATABASE_ERROR", dbError.message, requestId);
   }
 
-  return success({ connected: true }, requestId);
+  return success({ query: q, page, limit, sort, results: data }, requestId);
 });
