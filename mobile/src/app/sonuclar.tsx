@@ -82,7 +82,7 @@ export default function SonuclarScreen() {
   const [itemCount, setItemCount] = useState(PAGE_SIZE);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-  const kararlarQuery = useKararlar();
+  const kararlarQuery = useKararlar({ q: query });
   const items = buildResultRows(kararlarQuery.data ?? [], Math.min(itemCount, MAX_ITEMS));
 
   useEffect(() => {

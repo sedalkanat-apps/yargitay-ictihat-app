@@ -1,4 +1,4 @@
-import type { KararRepository } from '@/repositories/kararRepository';
+import type { KararAramaParametreleri, KararRepository } from '@/repositories/kararRepository';
 import type { KararOzet } from '@/types/karar';
 
 // Tek mock veri listesi. Uygulamadaki HİÇBİR ekran kendi karar kopyasını
@@ -49,12 +49,47 @@ const MOCK_KARARLAR: KararOzet[] = [
   },
 ];
 
+function turkceTarihiKarsilastir(a: KararOzet, b: KararOzet): number {
+  const [aGun, aAy, aYil] = a.tarih.split('.').map(Number);
+  const [bGun, bAy, bYil] = b.tarih.split('.').map(Number);
+  return new Date(bYil, bAy - 1, bGun).getTime() - new Date(aYil, aAy - 1, aGun).getTime();
+}
+
+// Edge Function'daki textSearch(..., { type: "plain" }) -> plainto_tsquery
+// çağrısını yaklaşık olarak taklit eder: sorgu kelimelere ayrılır ve
+// eşleşme için TÜM kelimelerin (sırasız, tam ifade aranmadan) karar
+// metninde geçmesi yeterlidir. Gerçek tsquery'nin aksine kelime kökü
+// (stemming) uygulanmaz ("simple" config zaten stem yapmaz), bu yüzden
+// substring içerme kontrolü yeterli bir yaklaşıklıktır.
+function kararKelimeleriIceriyorMu(karar: KararOzet, kelimeler: string[]): boolean {
+  const hedefMetin = [karar.ozet, karar.esasNo, karar.kararNo, karar.mahkeme, karar.daire, karar.hukukDali]
+    .join(' ')
+    .toLowerCase();
+  return kelimeler.every((kelime) => hedefMetin.includes(kelime));
+}
+
 export const mockKararRepository: KararRepository = {
   async getKararById(id: string): Promise<KararOzet | null> {
     return MOCK_KARARLAR.find((karar) => karar.id === id) ?? null;
   },
-  async getKararlar(): Promise<KararOzet[]> {
-    return MOCK_KARARLAR;
+  async getKararlar(params: KararAramaParametreleri): Promise<KararOzet[]> {
+    const kelimeler = params.q
+      .trim()
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((kelime) => kelime.length > 0);
+    const page = params.page ?? 1;
+    const limit = params.limit ?? 20;
+
+    const eslesenler =
+      kelimeler.length > 0
+        ? MOCK_KARARLAR.filter((karar) => kararKelimeleriIceriyorMu(karar, kelimeler))
+        : MOCK_KARARLAR;
+
+    const siralanmis = params.sort === 'date' ? [...eslesenler].sort(turkceTarihiKarsilastir) : eslesenler;
+
+    const baslangic = (page - 1) * limit;
+    return siralanmis.slice(baslangic, baslangic + limit);
   },
 };
 

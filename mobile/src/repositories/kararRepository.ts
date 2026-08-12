@@ -20,9 +20,16 @@ import type { KararOzet } from '@/types/karar';
 // `repositories/mevzuatRepository.ts` dosyası açılacaktır. Bu sprintte
 // mevzuat için repository veya feature geliştirilmemiştir; bu yalnızca bir
 // mimari nottur.
+export interface KararAramaParametreleri {
+  q: string;
+  page?: number;
+  limit?: number;
+  sort?: 'relevance' | 'date';
+}
+
 export interface KararRepository {
   getKararById(id: string): Promise<KararOzet | null>;
-  getKararlar(): Promise<KararOzet[]>;
+  getKararlar(params: KararAramaParametreleri): Promise<KararOzet[]>;
 }
 
 // Şu an aktif implementasyon mock'tur. Gerçek implementasyon hazır
