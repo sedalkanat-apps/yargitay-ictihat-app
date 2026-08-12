@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import {
   AlertTriangle,
@@ -10,7 +10,7 @@ import {
   Share2,
   SlidersHorizontal,
 } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FlatList, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -38,15 +38,13 @@ interface SonucSatiri {
 }
 
 function buildResultRows(kararlar: KararOzet[], count: number): SonucSatiri[] {
-  if (kararlar.length === 0) return [];
-  return Array.from({ length: count }, (_, index) => ({
-    key: `${kararlar[index % kararlar.length].id}-${index}`,
-    karar: kararlar[index % kararlar.length],
+  return kararlar.slice(0, count).map((karar) => ({
+    key: karar.id,
+    karar,
   }));
 }
 
 const SEARCH_QUERY = 'iş kazası tazminat';
-const TOTAL_RESULT_COUNT = 3482;
 const PAGE_SIZE = 6;
 const MAX_ITEMS = 24;
 
@@ -76,8 +74,8 @@ function DecisionCardSkeleton() {
 export default function SonuclarScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const [viewState, setViewState] = useState<ViewState>(DEV_FORCE_VIEW_STATE ?? 'loading');
-  const [query, setQuery] = useState(SEARCH_QUERY);
+  const { q } = useLocalSearchParams<{ q?: string }>();
+  const [query, setQuery] = useState(q ?? SEARCH_QUERY);
   const [selectedFilterChip, setSelectedFilterChip] = useState('Daire');
   const [itemCount, setItemCount] = useState(PAGE_SIZE);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
@@ -85,15 +83,18 @@ export default function SonuclarScreen() {
   const kararlarQuery = useKararlar({ q: query });
   const items = buildResultRows(kararlarQuery.data ?? [], Math.min(itemCount, MAX_ITEMS));
 
-  useEffect(() => {
-    if (DEV_FORCE_VIEW_STATE) return;
-    const timer = setTimeout(() => setViewState('success'), 700);
-    return () => clearTimeout(timer);
-  }, []);
+  const viewState: ViewState =
+    DEV_FORCE_VIEW_STATE ??
+    (kararlarQuery.isLoading
+      ? 'loading'
+      : kararlarQuery.isError
+        ? 'error'
+        : items.length === 0
+          ? 'empty'
+          : 'success');
 
-  const handleRetry = () => {
-    setViewState('loading');
-    setTimeout(() => setViewState('success'), 700);
+  const handleRetry = async () => {
+    await kararlarQuery.refetch();
   };
 
   const handleEndReached = () => {
@@ -208,7 +209,7 @@ export default function SonuclarScreen() {
                       Arama tamamlandı
                     </Text>
                     <Text className="mt-1 font-heading text-xl text-foreground">
-                      {TOTAL_RESULT_COUNT.toLocaleString('tr-TR')}{' '}
+                      {(kararlarQuery.data?.length ?? 0).toLocaleString('tr-TR')}{' '}
                       <Text className="font-body-semibold text-base text-muted-foreground">karar bulundu</Text>
                     </Text>
                   </View>

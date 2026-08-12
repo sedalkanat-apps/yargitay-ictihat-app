@@ -1,4 +1,5 @@
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import {
   ArrowRight,
@@ -87,6 +88,7 @@ const WIDE_CATEGORY = {
 
 export default function AraScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const [query, setQuery] = useState('');
 
   return (
@@ -138,7 +140,7 @@ export default function AraScreen() {
               <Button
                 label="Emsal Karar Ara"
                 icon={<ScanSearch size={18} color={colors.primary.foreground} />}
-                onPress={() => {}}
+                onPress={() => router.push({ pathname: '/sonuclar', params: { q: query } })}
                 className="mt-2 w-full"
               />
             </Card>
