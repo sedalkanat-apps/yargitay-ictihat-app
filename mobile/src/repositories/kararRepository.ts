@@ -1,4 +1,4 @@
-import { mockKararRepository } from '@/repositories/mockKararRepository';
+import { yargitayKararRepository } from '@/repositories/yargitayKararRepository';
 import type { KararOzet } from '@/types/karar';
 
 // Karar verisinin tek gerçek kaynağı Yargıtay Başkanlığı'nın resmî Karar Arama
@@ -34,4 +34,4 @@ export interface KararRepository {
 
 // Şu an aktif implementasyon mock'tur. Gerçek implementasyon hazır
 // olduğunda değişecek tek satır budur — hook'lar ve ekranlar hiç değişmez.
-export const kararRepository: KararRepository = mockKararRepository;
+export const kararRepository: KararRepository = yargitayKararRepository;
