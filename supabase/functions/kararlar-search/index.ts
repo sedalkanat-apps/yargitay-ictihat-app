@@ -1,6 +1,6 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { success, error } from "../_shared/response.ts";
+import { success, error, CORS_HEADERS } from "../_shared/response.ts";
 
 Deno.serve(async (req) => {
   const requestId = crypto.randomUUID();
@@ -14,6 +14,10 @@ Deno.serve(async (req) => {
       },
     },
   );
+
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
+  }
 
   if (req.method !== "GET") {
     return error(405, "METHOD_NOT_ALLOWED", "Method Not Allowed", requestId);
